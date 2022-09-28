@@ -1,6 +1,6 @@
 {
-  "name": "pingo",
-  "version": "1.0.4",
+  "name": "pingus",
+  "version": "0.1.0",
   "description": "A simple network ping tool",
   "author": "Wany <sung@wany.io> (https://wany.io)",
   "main": "lib/index.js",
@@ -21,10 +21,10 @@
     "net",
     "dgram"
   ],
-  "homepage": "https://github.com/wnynya/Pingo#readme",
+  "homepage": "https://github.com/wnynya/Pingus#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wnynya/Pingo.git"
+    "url": "https://github.com/wnynya/Pingus.git"
   },
   "scripts": {
     "pingo": "node lib/index.js",

@@ -1,19 +1,21 @@
 import { PingTCP, PingUDP, PingICMP } from './ping.mjs';
 
-async function tcp(options) {
+function tcp(options, callback) {
   return new Promise((resolve, reject) => {
     new PingTCP(options)
       .on('result', (result) => {
         resolve(result);
+        callback(null, result);
       })
       .on('error', (error, result) => {
         reject(result);
+        callback(error, result);
       })
       .send();
   });
 }
 
-async function udp(options) {
+function udp(options) {
   return new Promise((resolve, reject) => {
     new PingUDP(options)
       .on('result', (result) => {
@@ -26,7 +28,7 @@ async function udp(options) {
   });
 }
 
-async function icmp(options) {
+function icmp(options) {
   return new Promise((resolve, reject) => {
     new PingICMP(options)
       .on('result', (result) => {
