@@ -8,11 +8,11 @@ Supports TCP / UDP / ICMP protocol.
 - [Installation](#installation)
 - [Simple Example](#simple-example)
 - [API](#api)
-  - Class: [`pingus.Ping`](#classpingusping)
-    - Event: [`'ready'`]()
-    - Event: [`'result'`]()
-    - Event: [`'error'`]()
-    - [`ping.send()`]()
+  - Class: [`pingus.Ping`](#class-pingusping)
+    - Event: [`'ready'`](#event-ready)
+    - Event: [`'result'`](#event-result)
+    - Event: [`'error'`](#event-error)
+    - [`ping.send()`](#pingsend)
   - Class: [`pingus.PingTCP`](#pingtcp)
     - [`new PingTCP(options)`]()
     - [`ping.scan()`]()
@@ -68,6 +68,14 @@ pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
 ## API
 
 ## Class: `pingus.Ping`
+
+### Event: `'ready'`
+
+### Event: `'result'`
+
+### Event: `'error'`
+
+### `ping.send()`
 
 ## Usage
 
