@@ -1,3 +1,4 @@
+import EventEmitter from 'events';
 import IP from '@wanyne/ip';
 
 class RangeScanner extends EventEmitter {

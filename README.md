@@ -1,4 +1,4 @@
-# Pingo
+# Pingus
 
 A simple ping tool.
 Supports TCP / UDP / ICMP protocol.
@@ -6,46 +6,90 @@ Supports TCP / UDP / ICMP protocol.
 ## Table of Content
 
 - [Installation](#installation)
+- [Simple Example](#simple-example)
+- [API](#api)
+  - Class: [`pingus.Ping`](#classpingusping)
+    - Event: [`'ready'`]()
+    - Event: [`'result'`]()
+    - Event: [`'error'`]()
+    - [`ping.send()`]()
+  - Class: [`pingus.PingTCP`](#pingtcp)
+    - [`new PingTCP(options)`]()
+    - [`ping.scan()`]()
+  - Class: [`pingus.PingUDP`](#pingudp)
+    - [`new PingUDP(options)`]()
+    - [`ping.scan()`]()
+  - Class: [`pingus.PingICMP`](#pingicmp)
+    - [`new PingICMP(options)`]()
+    - [`ping.traceroute()`]()
+  - Class: [`pingus.RangeScanner`](#pingicmp)
+    - [`new RangeScanner(options)`]()
+  - [`pingus.tcp(options[, callback])`]()
+  - [`pingus.udp(options[, callback])`]()
+  - [`pingus.icmp(options[, callback])`]()
 - [Usage](#usage)
   - [TCP Ping](#tcp-ping)
-  - [Multiple Ports](#multiple-ports)
-  - [TCP Ping](#tcp-ping)
   - [UDP Ping](#udp-ping)
-  - [Scan Ports](#scan-ports)
+  - [ICMP Ping](#icmp-ping)
+  - [Scan TCP Ports](#scan-tcp-ports)
   - [Scan UDP Ports](#scan-udp-ports)
   - [Command Line](#command-line)
-- [API](#api)
-  - [query](#query)
-  - [ping](#ping)
-  - [scan](#scan)
 
 ## Installation
 
 ```
-npm i pingo
+npm i pingus
 ```
+
+## Simple Example
+
+```js
+// TCP Ping to localhost:22
+import pingus from 'pingus'; // ESM
+pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
+```
+
+```js
+// Result
+{
+  error: undefined,
+  type: 'ping/tcp',
+  status: 'open',
+  host: 'localhost',
+  ip: '127.0.0.1',
+  ips: [ '127.0.0.1' ],
+  time: 2,
+  port: 22,
+  name: 'ssh',
+  banner: 'SSH-2.0-OpenSSH_8.9p1 Ubuntu-3'
+}
+```
+
+## API
+
+## Class: `pingus.Ping`
 
 ## Usage
 
 ESM
 
 ```js
-import pingo from 'pingo';
+import pingus from 'pingus';
 ```
 
 CJS
 
 ```js
-const pingo = require('pingo').default;
+const pingus = require('pingus').default;
 ```
 
-### TCP Ping
+### Ping
 
 Using class
 
 ```js
 // TCP ping to localhost:80
-new pingo.PingTCP({ host: 'localhost' })
+new pingus.PingTCP({ host: 'localhost' })
   .on('result', (result) => {
     console.log(result);
   })
@@ -59,7 +103,7 @@ Using callback
 
 ```js
 // TCP ping to localhost:80
-pingo.tcp({ host: 'localhost' }, (err, result) => {
+pingus.tcp({ host: 'localhost' }, (err, result) => {
   if (err) {
     throw err;
   }
@@ -71,7 +115,7 @@ Using Promise
 
 ```js
 // TCP ping to localhost:80
-pingo
+pingus
   .tcp({ host: 'localhost' })
   .then((result) => {
     console.log(result);
@@ -85,7 +129,7 @@ Using async / await
 
 ```js
 // TCP ping to localhost:80
-const result = await pingo.tcp({ host: 'localhost' });
+const result = await pingus.tcp({ host: 'localhost' });
 console.log(result);
 ```
 
@@ -93,132 +137,89 @@ console.log(result);
 
 ```js
 {
-  "error": undefined,
-  "type": "ping/tcp",
-  "host": "localhost",
-  "ip": "127.0.0.1",
-  "ips": ["127.0.0.1"],
-  "port": 80,
-  "status": "open",
-  "name": "http",
-  "banner": "",
-  "time": 2
+  error: undefined,
+  type: 'ping/tcp',
+  status: 'open',
+  host: 'localhost',
+  ip: '127.0.0.1',
+  ips: [ '127.0.0.1' ],
+  time: 2,
+  port: 80,
+  name: 'http',
+  banner: ''
 }
 ```
 
 </details>
 
-### Multiple Ports
+### UDP Ping
+
+Using class
 
 ```js
-// TCP ping to ports of localhost
-ping('localhost:22,80-90,443,3306')
+// TCP ping to localhost:80
+new pingus.PingTCP({ host: 'localhost' })
+  .on('result', (result) => {
+    console.log(result);
+  })
+  .on('error', (err, result) => {
+    throw err;
+  })
+  .send();
+```
+
+Using callback
+
+```js
+// TCP ping to localhost:80
+pingus.tcp({ host: 'localhost' }, (err, result) => {
+  if (err) {
+    throw err;
+  }
+  console.log(result);
+});
+```
+
+Using Promise
+
+```js
+// TCP ping to localhost:80
+pingus
+  .tcp({ host: 'localhost' })
   .then((result) => {
     console.log(result);
   })
   .catch((err) => {
     throw err;
   });
+```
+
+Using async / await
+
+```js
+// TCP ping to localhost:80
+const result = await pingus.tcp({ host: 'localhost' });
+console.log(result);
 ```
 
 <details><summary>Result</summary>
 
 ```js
 {
-  "error": undefined,
-  "type": "ping/tcp/scan",
-  "host": "localhost",
-  "ip": "127.0.0.1",
-  "ips": ["127.0.0.1"],
-  "ports": [22, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 443, 3306],
-  "status": {
-    "open": [22, 80, 3306],
-    "reset": [],
-    "close": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 443],
-    "filtered": [],
-    "error": []
-  },
-  "names": {
-    "22": "ssh",
-    "80": "http",
-    "81": "unknown",
-    "82": "xfer",
-    "83": "mit-ml-dev",
-    "84": "ctf",
-    "85": "mit-ml-dev",
-    "86": "mfcobol",
-    "87": "unknown",
-    "88": "kerberos",
-    "89": "su-mit-tg",
-    "90": "dnsix",
-    "443": "https",
-    "3306": "mysql"
-  },
-  "banners": { "22": "SSH-2.0-OpenSSH_8.9p1 Ubuntu-3" },
-  "errors": {},
-  "time": 2005
+  error: undefined,
+  type: 'ping/tcp',
+  status: 'open',
+  host: 'localhost',
+  ip: '127.0.0.1',
+  ips: [ '127.0.0.1' ],
+  time: 2,
+  port: 80,
+  name: 'http',
+  banner: ''
 }
 ```
 
 </details>
-
-### Ping TCP
-
-```js
-// TCP ping to localhost:80
-ping
-  .tcp('localhost', 80)
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((err) => {
-    throw err;
-  });
-```
-
-### Ping UDP
-
-```js
-// UDP ping to localhost:68
-ping
-  .udp('localhost', 68)
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((err) => {
-    throw err;
-  });
-```
-
-### Scan Ports
-
-```js
-// TCP scan to ports of localhost
-ping
-  .scan('localhost', [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 80, 443, 3306])
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((err) => {
-    throw err;
-  });
-```
-
-### Scan UDP Ports
-
-```js
-// UDP scan to ports of localhost
-ping
-  .scan('localhost', [67, 68, 161, 162, 163, 164], {
-    protocol: 'udp',
-  })
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((err) => {
-    throw err;
-  });
-```
 
 ### Command Line
 

@@ -1,10 +1,10 @@
 import fs from 'fs';
 import net from 'net';
 import dgram from 'dgram';
+import EventEmitter from 'events';
 import raw from 'raw-socket';
 import dns from '@wanyne/dns';
 import IP from '@wanyne/ip';
-import EventEmitter from 'events';
 
 import path from 'path';
 import { fileURLToPath } from 'url';

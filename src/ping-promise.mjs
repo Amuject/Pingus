@@ -1,6 +1,6 @@
 import { PingTCP, PingUDP, PingICMP } from './ping.mjs';
 
-function tcp(options, callback) {
+function tcp(options, callback = () => {}) {
   return new Promise((resolve, reject) => {
     new PingTCP(options)
       .on('result', (result) => {
