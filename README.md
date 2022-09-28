@@ -13,20 +13,20 @@ Supports TCP / UDP / ICMP protocol.
     - Event: [`'result'`](#event-result)
     - Event: [`'error'`](#event-error)
     - [`ping.send()`](#pingsend)
-  - Class: [`pingus.PingTCP`](#pingtcp)
-    - [`new PingTCP(options)`]()
-    - [`ping.scan()`]()
-  - Class: [`pingus.PingUDP`](#pingudp)
-    - [`new PingUDP(options)`]()
-    - [`ping.scan()`]()
-  - Class: [`pingus.PingICMP`](#pingicmp)
-    - [`new PingICMP(options)`]()
-    - [`ping.traceroute()`]()
-  - Class: [`pingus.RangeScanner`](#pingicmp)
-    - [`new RangeScanner(options)`]()
-  - [`pingus.tcp(options[, callback])`]()
-  - [`pingus.udp(options[, callback])`]()
-  - [`pingus.icmp(options[, callback])`]()
+  - Class: [`pingus.PingTCP`](#class-pingustcp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
+    - [`new PingTCP(options)`](#new-pingtcpoptions)
+    - [`pingtcp.scan()`](#pingtcpscan)
+  - Class: [`pingus.PingUDP`](#pingudp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
+    - [`new PingUDP(options)`](#new-pingudpoptions)
+    - [`pingudp.scan()`](#pingudpscan)
+  - Class: [`pingus.PingICMP`](#pingicmp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
+    - [`new PingICMP(options)`](#new-pingicmpoptions)
+    - [`pingicmp.traceroute()`](#pingicmptraceroute)
+  - Class: [`pingus.RangeScanner`](#class-pingus)
+    - [`new RangeScanner(options)`](#new-rangescanneroptions)
+  - [`pingus.tcp(options[, callback])`](#pingustcpoptions-callback)
+  - [`pingus.udp(options[, callback])`](#pingusudpoptions-callback)
+  - [`pingus.icmp(options[, callback])`](#pingusicmpoptions-callback)
 - [Usage](#usage)
   - [TCP Ping](#tcp-ping)
   - [UDP Ping](#udp-ping)
@@ -76,6 +76,24 @@ pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
 ### Event: `'error'`
 
 ### `ping.send()`
+
+## Class: `pingus.PingTCP` Extends: [`pingus.Ping`](#class-pingusping)
+
+### `new PingTCP(options)`
+
+### `pingtcp.scan()`
+
+## Class: `pingus.PingUDP` Extends: [`pingus.Ping`](#class-pingusping)
+
+### `new PingUDP(options)`
+
+### `pingudp.scan()`
+
+## Class: `pingus.PingICMP` Extends: [`pingus.Ping`](#class-pingusping)
+
+### `new PingICMP(options)`
+
+### `pingicmp.traceroute()`
 
 ## Usage
 
