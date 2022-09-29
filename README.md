@@ -13,16 +13,16 @@ Supports TCP / UDP / ICMP protocol.
     - Event: [`'result'`](#event-result)
     - Event: [`'error'`](#event-error)
     - [`ping.send()`](#pingsend)
-  - Class: [`pingus.PingTCP`](#class-pingustcp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
+  - Class: [`pingus.PingTCP`](#class-pinguspingtcp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
     - [`new PingTCP(options)`](#new-pingtcpoptions)
     - [`pingtcp.scan()`](#pingtcpscan)
-  - Class: [`pingus.PingUDP`](#pingudp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
+  - Class: [`pingus.PingUDP`](#class-pinguspingudp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
     - [`new PingUDP(options)`](#new-pingudpoptions)
     - [`pingudp.scan()`](#pingudpscan)
-  - Class: [`pingus.PingICMP`](#pingicmp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
+  - Class: [`pingus.PingICMP`](#class-pinguspingicmp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
     - [`new PingICMP(options)`](#new-pingicmpoptions)
     - [`pingicmp.traceroute()`](#pingicmptraceroute)
-  - Class: [`pingus.RangeScanner`](#class-pingus)
+  - Class: [`pingus.RangeScanner`](#class-pingusrangescanner)
     - [`new RangeScanner(options)`](#new-rangescanneroptions)
   - [`pingus.tcp(options[, callback])`](#pingustcpoptions-callback)
   - [`pingus.udp(options[, callback])`](#pingusudpoptions-callback)
@@ -71,7 +71,68 @@ pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
 
 ### Event: `'ready'`
 
+- `result` [`<Object>`]()
+
+Emitted when ready to send ping. (Resolve DNS, Filter Bogon IP)
+
+```js
+import pingus from 'pingus';
+
+const ping = new pingus.PingTCP({
+  host: 'example.com',
+});
+ping.on('ready', (result) => {
+  console.log('ping\ttarget:\t', result.host);
+  console.log('\tips:\t', result.ips);
+});
+ping.send();
+```
+
+<details><summary>Result</summary>
+
+```
+ping    target: example.com
+        ips: [ '93.184.216.34', '2606:2800:220:1:248:1893:25c8:1946' ]
+```
+
+</details>
+
 ### Event: `'result'`
+
+- `result` [`<Object>`]()
+
+Result of ping data.
+
+```js
+import pingus from 'pingus';
+
+const ping = new pingus.PingTCP({
+  host: 'example.com',
+});
+ping.on('result', (result) => {
+  console.log(result);
+});
+ping.send();
+```
+
+<details><summary>Result</summary>
+
+```
+{
+  error: undefined,
+  type: 'ping/tcp',
+  status: 'open',
+  host: 'example.com',
+  ip: '93.184.216.34',
+  ips: [ '93.184.216.34', '2606:2800:220:1:248:1893:25c8:1946' ],
+  time: 127,
+  port: 80,
+  name: 'http',
+  banner: ''
+}
+```
+
+</details>
 
 ### Event: `'error'`
 
@@ -81,7 +142,22 @@ pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
 
 ### `new PingTCP(options)`
 
+- `options` [`<Object>`]()
+  - `host` [`<string>`]() Set target hostname (domain) or ip address.
+  - `port` [`<number>`]() Set target port when using `pingtcp.send()`. _Default: `80`_
+  - `ports` [`<Array>`]() Set target ports when using `pingtcp.scan()`.
+  - `timeout` [`<number>`]() Set timeout. _Default: `2000`_
+  - `dnsResolve` [`<boolean>`]() Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
+  - `dnsServer` [`<string>`]() Set DNS server to resolve DNS records.
+  - `filterBogon` [`<boolean>`]() [Filter bogon ip address](https://en.wikipedia.org/wiki/Bogon_filtering) in `host`. _Default: `true`_
+
+### `pingtcp.send()`
+
+Send TCP ping. Return result on Event: [`'result'`]().
+
 ### `pingtcp.scan()`
+
+Scan ports using TCP ping. Return result on Event: [`'result'`]().
 
 ## Class: `pingus.PingUDP` Extends: [`pingus.Ping`](#class-pingusping)
 
@@ -94,6 +170,12 @@ pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
 ### `new PingICMP(options)`
 
 ### `pingicmp.traceroute()`
+
+## `pingus.tcp(options[, callback])`
+
+## `pingus.udp(options[, callback])`
+
+## `pingus.icmp(options[, callback])`
 
 ## Usage
 
