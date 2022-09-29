@@ -306,7 +306,7 @@ class PingUDP extends Ping {
       let sto;
 
       socket.on('close', (error) => {
-        !inner ? this.emitResult : null;
+        !inner ? this.emitResult() : null;
         resolve(this.result);
         return;
       });
@@ -504,7 +504,7 @@ class PingICMP extends Ping {
         socket.close();
       });
       socket.on('close', () => {
-        !inner ? this.emitResult : null;
+        !inner ? this.emitResult() : null;
         resolve(this.result);
         return;
       });

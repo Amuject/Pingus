@@ -15,27 +15,29 @@ Supports TCP / UDP / ICMP protocol.
     - [`ping.send()`](#pingsend)
   - Class: [`pingus.PingTCP`](#class-pinguspingtcp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
     - [`new PingTCP(options)`](#new-pingtcpoptions)
+    - [`pingtcp.send()`](#pingtcpsend)
     - [`pingtcp.scan()`](#pingtcpscan)
   - Class: [`pingus.PingUDP`](#class-pinguspingudp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
     - [`new PingUDP(options)`](#new-pingudpoptions)
+    - [`pingudp.send()`](#pingudpsend)
     - [`pingudp.scan()`](#pingudpscan)
   - Class: [`pingus.PingICMP`](#class-pinguspingicmp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
     - [`new PingICMP(options)`](#new-pingicmpoptions)
-    - [`pingicmp.traceroute()`](#pingicmptraceroute)
-  - Class: [`pingus.RangeScanner`](#class-pingusrangescanner)
+    - [`pingicmp.send()`](#pingicmpsend)
+    - [`pingicmp.traceroute()`](#pingicmptraceroute) _(WIP)_
+  - Class: [`pingus.RangeScanner`](#class-pingusrangescanner) _(WIP)_
     - [`new RangeScanner(options)`](#new-rangescanneroptions)
   - [`pingus.tcp(options[, callback])`](#pingustcpoptions-callback)
   - [`pingus.udp(options[, callback])`](#pingusudpoptions-callback)
   - [`pingus.icmp(options[, callback])`](#pingusicmpoptions-callback)
 - [Usage](#usage)
+  - [Seng Ping Styles](#send-ping-styles)
   - [TCP Ping](#tcp-ping)
   - [UDP Ping](#udp-ping)
   - [ICMP Ping](#icmp-ping)
   - [Scan TCP Ports](#scan-tcp-ports)
   - [Scan UDP Ports](#scan-udp-ports)
-  - [Command Line](#command-line)
-
----
+  - [Using RangeScanner](#using-rangescanner) _(WIP)_
 
 ## Installation
 
@@ -67,17 +69,17 @@ pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
 }
 ```
 
----
-
 # API
 
 ## Class: `pingus.Ping`
+
+`pingus.Ping` is [`EventEmitter`]() with the following events:
 
 ### Event: `'ready'`
 
 - `result` [`<Object>`]()
 
-Emitted when ready to send ping. (Resolve DNS, Filter Bogon IP)
+Emitted when ready (Resolve DNS, Filter Bogon IP) to send ping after call [`ping.send()`](#pingsend).
 
 ```js
 import pingus from 'pingus';
@@ -92,7 +94,7 @@ ping.on('ready', (result) => {
 ping.send();
 ```
 
-<details><summary>Console Output</summary>
+<details><summary>Result (Console Output)</summary>
 
 ```
 ping    target: example.com
@@ -119,7 +121,7 @@ ping.on('result', (result) => {
 ping.send();
 ```
 
-<details><summary>Console Output</summary>
+<details><summary>Result (Console Output)</summary>
 
 ```
 {
@@ -140,9 +142,20 @@ ping.send();
 
 ### Event: `'error'`
 
+- [`<Error>`]()
+- `result` [`<Object>`]()
+
+Emitted when an error occurs. `result` has last statement before error occurs and error code.
+
 ### `ping.send()`
 
+Send ping. See some of examples in [Usage](#usage)
+
 ## Class: `pingus.PingTCP` Extends: [`pingus.Ping`](#class-pingusping)
+
+Class for TCP ping.
+<br>
+`pingus.PingTCP` is type of [`pingus.Ping`](#class-pingusping)
 
 ### `new PingTCP(options)`
 
@@ -157,23 +170,67 @@ ping.send();
 
 ### `pingtcp.send()`
 
-Send TCP ping. Return result on Event: [`'result'`]().
+See [`ping.send()`](#pingsend).
+Some of examples in [Usage](#usage).
 
 ### `pingtcp.scan()`
 
 Scan ports using TCP ping. Return result on Event: [`'result'`]().
+See some of examples in [Usage](#usage).
 
 ## Class: `pingus.PingUDP` Extends: [`pingus.Ping`](#class-pingusping)
 
+Class for UDP ping.<br>
+`pingus.PingUDP` is type of [`pingus.Ping`](#class-pingusping)
+
 ### `new PingUDP(options)`
+
+- `options` [`<Object>`]()
+  - `host` [`<string>`]() Set target hostname (domain) or ip address.
+  - `port` [`<number>`]() Set target port when using `pingudp.send()`. _Default: `68`_
+  - `ports` [`<Array>`]() Set target ports when using `pingudp.scan()`.
+  - `bytes` [`<number>`]() Set random bytes length when send on UDP ping socket connected. Ignored when `body` options set. _Default: `32`_
+  - `body` [`<string>`]() Set body when send on UDP ping socket connected.
+  - `timeout` [`<number>`]() Set timeout. _Default: `2000`_
+  - `dnsResolve` [`<boolean>`]() Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
+  - `dnsServer` [`<string>`]() Set DNS server to resolve DNS records.
+  - `filterBogon` [`<boolean>`]() [Filter bogon ip address](https://en.wikipedia.org/wiki/Bogon_filtering) in `host`. _Default: `true`_
+
+### `pingudp.send()`
+
+See [`ping.send()`](#pingsend).
+Some of examples in [Usage](#usage).
 
 ### `pingudp.scan()`
 
+Similar with [`pingtcp.scan()`](#pingtcpscan).<br>
+Scan ports using UDP ping. Return result on Event: [`'result'`]().
+See some of examples in [Usage](#usage).
+
 ## Class: `pingus.PingICMP` Extends: [`pingus.Ping`](#class-pingusping)
+
+Class for ICMP ping.
+<br>
+`pingus.PingICMP` is type of [`pingus.Ping`](#class-pingusping)
 
 ### `new PingICMP(options)`
 
+- `options` [`<Object>`]()
+  - `host` [`<string>`]() Set target hostname (domain) or ip address.
+  - `ttl` [`<number>`]() Set ttl. _Default: `128`_
+  - `timeout` [`<number>`]() Set timeout. _Default: `2000`_
+  - `dnsResolve` [`<boolean>`]() Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
+  - `dnsServer` [`<string>`]() Set DNS server to resolve DNS records.
+  - `filterBogon` [`<boolean>`]() [Filter bogon ip address](https://en.wikipedia.org/wiki/Bogon_filtering) in `host`. _Default: `true`_
+
+### `pingicmp.send()`
+
+See [`ping.send()`](#pingsend).
+Some of examples in [Usage](#usage).
+
 ### `pingicmp.traceroute()`
+
+WIP
 
 ## `pingus.tcp(options[, callback])`
 
@@ -195,9 +252,9 @@ CJS
 const pingus = require('pingus').default;
 ```
 
-## Ping
+## Send Ping Styles
 
-Using class
+### Using [`Class`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Classes) extends [`EventEmitter`](https://nodejs.org/docs/latest/api/events.html)
 
 ```js
 // TCP ping to localhost:80
@@ -211,7 +268,7 @@ new pingus.PingTCP({ host: 'localhost' })
   .send();
 ```
 
-Using callback
+### Using [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function)
 
 ```js
 // TCP ping to localhost:80
@@ -223,7 +280,7 @@ pingus.tcp({ host: 'localhost' }, (err, result) => {
 });
 ```
 
-Using Promise
+### Using [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise)
 
 ```js
 // TCP ping to localhost:80
@@ -237,7 +294,7 @@ pingus
   });
 ```
 
-Using async / await
+### Using [`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)
 
 ```js
 // TCP ping to localhost:80
@@ -245,7 +302,7 @@ const result = await pingus.tcp({ host: 'localhost' });
 console.log(result);
 ```
 
-<details><summary>Result</summary>
+<details><summary>Result (Console Output)</summary>
 
 ```js
 {
@@ -264,13 +321,11 @@ console.log(result);
 
 </details>
 
-### UDP Ping
-
-Using class
+## UDP Ping
 
 ```js
-// TCP ping to localhost:80
-new pingus.PingTCP({ host: 'localhost' })
+// UDP ping to localhost:19132
+new pingus.PingUDP({ host: 'localhost', port: 19132 })
   .on('result', (result) => {
     console.log(result);
   })
@@ -280,152 +335,96 @@ new pingus.PingTCP({ host: 'localhost' })
   .send();
 ```
 
-Using callback
-
-```js
-// TCP ping to localhost:80
-pingus.tcp({ host: 'localhost' }, (err, result) => {
-  if (err) {
-    throw err;
-  }
-  console.log(result);
-});
-```
-
-Using Promise
-
-```js
-// TCP ping to localhost:80
-pingus
-  .tcp({ host: 'localhost' })
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((err) => {
-    throw err;
-  });
-```
-
-Using async / await
-
-```js
-// TCP ping to localhost:80
-const result = await pingus.tcp({ host: 'localhost' });
-console.log(result);
-```
-
-<details><summary>Result</summary>
+<details><summary>Result (Console Output)</summary>
 
 ```js
 {
   error: undefined,
-  type: 'ping/tcp',
-  status: 'open',
+  type: 'ping/udp',
+  status: 'close',
   host: 'localhost',
   ip: '127.0.0.1',
   ips: [ '127.0.0.1' ],
   time: 2,
-  port: 80,
-  name: 'http',
-  banner: ''
+  port: 19132,
+  name: 'minecraft-be'
 }
 ```
 
 </details>
 
-### Command Line
+## ICMP Ping
 
-```sh
-cd node_modules/ping-port
-npm run query [host]:<port|ports> <...options>
+```js
+// ICMP ping to example.com
+new pingus.PingICMP({ host: 'example.com' })
+  .on('result', (result) => {
+    console.log(result);
+  })
+  .on('error', (err, result) => {
+    throw err;
+  })
+  .send();
 ```
 
-options:<br>
-&nbsp;&nbsp;`t`: use tcp (default)<br>
-&nbsp;&nbsp;`u`: use udp<br>
-&nbsp;&nbsp;`f`: full log output<br>
-&nbsp;&nbsp;`d <dns>`: use specific dns server<br>
-<br>
-Example
+<details><summary>Result (Console Output)</summary>
 
-```sh
-npm run query example.com:@ t d 8.8.8.8
-```
-
-<details><summary>Result</summary>
-
-```
-Running ping-port at 2022-09-24T13:15:21.226Z
-
-query   : tcp/example.com:@
-dns     : 8.8.8.8
-ip      : 93.184.216.34
-
-scan    : 1024 ports
-open    : [80,443]
-reset   : []
-close   : [1119,1935]
-filtered: 1020 ports
-
-80      open    http
-443     open    https
-1119    close   bnetgame
-1935    close   macromedia-fcs
+```js
+{
+  error: undefined,
+  type: 'ping/icmp',
+  status: 'reply',
+  host: 'example.com',
+  ip: '93.184.216.34',
+  ips: [ '93.184.216.34', '2606:2800:220:1:248:1893:25c8:1946' ],
+  time: 122,
+  ttl: 128,
+  bytes: 8,
+  reply: {
+    source: '93.184.216.34',
+    type: 0,
+    code: 0,
+    typestr: 'ECHO_REPLY',
+    codestr: 'NO_CODE'
+  }
+}
 ```
 
 </details>
 
-## API
-
-### query
-
 ```js
-ping(target, options);
+// ICMP ping to example.com using ttl = 10
+new pingus.PingICMP({ host: 'example.com', ttl: 10 })
+  .on('result', (result) => {
+    console.log(result);
+  })
+  .on('error', (err, result) => {
+    throw err;
+  })
+  .send();
 ```
 
-target: `string [host]:<port|ports>`<br>
-<br>
-target ports:<br>
-`:80`: target port 80<br>
-`:80,90,100`: target port 80, 90 and 100<br>
-`:80-100`: target port in range 80 to 100<br>
-`:22,80-100,443`: target port 22, port in range 80 to 100 and port 443<br>
-`:@`: target most used 1024 ports<br>
-`:*`: target all ports (same as `:1-65535`)<br>
-<br>
-options: `Object`<br>
-&nbsp;&nbsp;options.protocol: `string <tcp|udp>`<br>
-&nbsp;&nbsp;options.filterBogon: `boolean`<br>
-&nbsp;&nbsp;options.dnsServer: `string <server>`<br>
-
-### ping
+<details><summary>Result (Console Output)</summary>
 
 ```js
-ping.tcp(target, options);
+{
+  error: undefined,
+  type: 'ping/icmp',
+  status: 'exception',
+  host: 'example.com',
+  ip: '93.184.216.34',
+  ips: [ '93.184.216.34', '2606:2800:220:1:248:1893:25c8:1946' ],
+  time: 127,
+  ttl: 10,
+  bytes: 8,
+  reply: {
+    source: '152.195.76.133',
+    type: 11,
+    code: 0,
+    typestr: 'TIME_EXCEEDED',
+    codestr: 'NO_CODE'
+  }
+
 ```
 
-```js
-ping.udp(host, port, options);
-```
-
-host: `string [host]`<br>
-port: `number <port>`<br>
-options: `Object`<br>
-&nbsp;&nbsp;options.timeout: `number <miliseconds>`<br>
-&nbsp;&nbsp;options.filterBogon: `boolean`<br>
-&nbsp;&nbsp;options.dnsServer: `string <server>`<br>
-
-### scan
-
-```js
-ping.scan(host, ports, options);
-```
-
-host: `string [host]`<br>
-ports: `Array <ports>`<br>
-options: `Object`<br>
-&nbsp;&nbsp;options.timeout: `number <miliseconds>`<br>
-&nbsp;&nbsp;options.chunk: `number <chunk>`<br>
-&nbsp;&nbsp;options.protocol: `string <tcp|udp>`<br>
-&nbsp;&nbsp;options.filterBogon: `boolean`<br>
-&nbsp;&nbsp;options.dnsServer: `string <server>`<br>
+</details>

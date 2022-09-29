@@ -1,9 +1,10 @@
 import pingus from 'pingus';
 
-const ping = new pingus.PingTCP({
-  host: 'example.com',
-});
-ping.on('result', (result) => {
-  console.log(result);
-});
-ping.send();
+new pingus.PingICMP({ host: 'example.com', ttl: 10 })
+  .on('result', (result) => {
+    console.log(result);
+  })
+  .on('error', (err, result) => {
+    throw err;
+  })
+  .send();
