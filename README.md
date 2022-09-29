@@ -373,6 +373,8 @@ new pingus.PingTCP({ host: 'localhost', port: 22 })
 }
 ```
 
+</details>
+
 ## UDP Ping
 
 ```js
