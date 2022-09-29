@@ -256,6 +256,7 @@ class PingTCP extends Ping {
     this.result.status = 'finish';
 
     this.result.time = new Date().getTime() - timestamp;
+    this.emitResult();
     return this.result;
   }
 }
@@ -421,6 +422,7 @@ class PingUDP extends Ping {
     this.result.status = 'finish';
 
     this.result.time = new Date().getTime() - timestamp;
+    this.emitResult();
     return this.result;
   }
 }

@@ -321,6 +321,37 @@ console.log(result);
 
 </details>
 
+## TCP Ping
+
+```js
+// TCP ping to localhost:22
+new pingus.PingTCP({ host: 'localhost', port: 22 })
+  .on('result', (result) => {
+    console.log(result);
+  })
+  .on('error', (err, result) => {
+    throw err;
+  })
+  .send();
+```
+
+<details><summary>Result (Console Output)</summary>
+
+```js
+{
+  error: undefined,
+  type: 'ping/tcp',
+  status: 'open',
+  host: 'localhost',
+  ip: '127.0.0.1',
+  ips: [ '127.0.0.1' ],
+  time: 1,
+  port: 22,
+  name: 'ssh',
+  banner: 'SSH-2.0-OpenSSH_8.9p1 Ubuntu-3'
+}
+```
+
 ## UDP Ping
 
 ```js
@@ -425,6 +456,107 @@ new pingus.PingICMP({ host: 'example.com', ttl: 10 })
     codestr: 'NO_CODE'
   }
 
+```
+
+</details>
+
+## Scan TCP Ports
+
+```js
+// TCP ping scan to localhost
+new pingus.PingTCP({
+  host: 'localhost',
+  ports: [21, 22, 80, 443, 3306, 8080],
+})
+  .on('result', (result) => {
+    console.log(result);
+  })
+  .on('error', (err, result) => {
+    throw err;
+  })
+  .scan();
+```
+
+<details><summary>Result (Console Output)</summary>
+
+```js
+{
+  error: undefined,
+  type: 'ping/tcp/scan',
+  status: 'finish',
+  host: 'localhost',
+  ip: '127.0.0.1',
+  ips: [ '127.0.0.1' ],
+  time: 2008,
+  ports: [ 21, 22, 80, 443, 3306, 8080 ],
+  statuses: {
+    open: [ 22, 80, 8080 ],
+    reset: [],
+    close: [ 21, 443, 3306 ],
+    filtered: [],
+    error: []
+  },
+  names: {
+    '21': 'ftp',
+    '22': 'ssh',
+    '80': 'http',
+    '443': 'https',
+    '3306': 'mysql',
+    '8080': 'http-alt'
+  },
+  banners: { '22': 'SSH-2.0-OpenSSH_8.9p1 Ubuntu-3' },
+  errors: {}
+}
+```
+
+</details>
+
+## Scan UDP Ports
+
+```js
+// UDP ping scan to localhost
+new pingus.PingUDP({
+  host: 'localhost',
+  ports: [67, 68, 161, 162, 445],
+})
+  .on('result', (result) => {
+    console.log(result);
+  })
+  .on('error', (err, result) => {
+    throw err;
+  })
+  .scan();
+```
+
+<details><summary>Result (Console Output)</summary>
+
+```js
+{
+  error: undefined,
+  type: 'ping/udp/scan',
+  status: 'finish',
+  host: 'localhost',
+  ip: '127.0.0.1',
+  ips: [ '127.0.0.1' ],
+  time: 2003,
+  ports: [ 67, 68, 161, 162, 445 ],
+  statuses: {
+    open: [ 68 ],
+    reset: [],
+    close: [ 67, 161, 162, 445 ],
+    filtered: [],
+    error: []
+  },
+  names: {
+    '67': 'bootps',
+    '68': 'bootpc',
+    '161': 'snmp',
+    '162': 'snmptrap',
+    '445': 'microsoft-ds'
+  },
+  banners: {},
+  errors: {}
+}
 ```
 
 </details>
