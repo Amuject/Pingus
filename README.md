@@ -35,6 +35,8 @@ Supports TCP / UDP / ICMP protocol.
   - [Scan UDP Ports](#scan-udp-ports)
   - [Command Line](#command-line)
 
+---
+
 ## Installation
 
 ```
@@ -65,7 +67,9 @@ pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
 }
 ```
 
-## API
+---
+
+# API
 
 ## Class: `pingus.Ping`
 
@@ -88,7 +92,7 @@ ping.on('ready', (result) => {
 ping.send();
 ```
 
-<details><summary>Result</summary>
+<details><summary>Console Output</summary>
 
 ```
 ping    target: example.com
@@ -115,7 +119,7 @@ ping.on('result', (result) => {
 ping.send();
 ```
 
-<details><summary>Result</summary>
+<details><summary>Console Output</summary>
 
 ```
 {
@@ -177,7 +181,7 @@ Scan ports using TCP ping. Return result on Event: [`'result'`]().
 
 ## `pingus.icmp(options[, callback])`
 
-## Usage
+# Usage
 
 ESM
 
@@ -191,7 +195,7 @@ CJS
 const pingus = require('pingus').default;
 ```
 
-### Ping
+## Ping
 
 Using class
 
