@@ -30,8 +30,10 @@ Supports TCP / UDP / ICMP protocol.
   - [`pingus.tcp(options[, callback])`](#pingustcpoptions-callback)
   - [`pingus.udp(options[, callback])`](#pingusudpoptions-callback)
   - [`pingus.icmp(options[, callback])`](#pingusicmpoptions-callback)
+  - [`pingus.tcpscan(options[, callback])`](#pingustcpscanoptions-callback)
+  - [`pingus.udpscan(options[, callback])`](#pingusudpscanoptions-callback)
 - [Usage](#usage)
-  - [Seng Ping Styles](#send-ping-styles)
+  - [Send Ping Styles](#send-ping-styles)
   - [TCP Ping](#tcp-ping)
   - [UDP Ping](#udp-ping)
   - [ICMP Ping](#icmp-ping)
@@ -73,11 +75,11 @@ pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
 
 ## Class: `pingus.Ping`
 
-`pingus.Ping` is [`EventEmitter`]() with the following events:
+`pingus.Ping` is [`EventEmitter`](https://nodejs.org/docs/latest/api/events.html) with the following events:
 
 ### Event: `'ready'`
 
-- `result` [`<Object>`]()
+- `result` [`<Object>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 Emitted when ready (Resolve DNS, Filter Bogon IP) to send ping after call [`ping.send()`](#pingsend).
 
@@ -105,7 +107,7 @@ ping    target: example.com
 
 ### Event: `'result'`
 
-- `result` [`<Object>`]()
+- `result` [`<Object>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 Result of ping data.
 
@@ -142,8 +144,8 @@ ping.send();
 
 ### Event: `'error'`
 
-- [`<Error>`]()
-- `result` [`<Object>`]()
+- [`<Error>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)
+- `result` [`<Object>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 Emitted when an error occurs. `result` has last statement before error occurs and error code.
 
@@ -159,14 +161,14 @@ Class for TCP ping.
 
 ### `new PingTCP(options)`
 
-- `options` [`<Object>`]()
-  - `host` [`<string>`]() Set target hostname (domain) or ip address.
-  - `port` [`<number>`]() Set target port when using `pingtcp.send()`. _Default: `80`_
-  - `ports` [`<Array>`]() Set target ports when using `pingtcp.scan()`.
-  - `timeout` [`<number>`]() Set timeout. _Default: `2000`_
-  - `dnsResolve` [`<boolean>`]() Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
-  - `dnsServer` [`<string>`]() Set DNS server to resolve DNS records.
-  - `filterBogon` [`<boolean>`]() [Filter bogon ip address](https://en.wikipedia.org/wiki/Bogon_filtering) in `host`. _Default: `true`_
+- `options` [`<Object>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
+  - `host` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set target hostname (domain) or ip address.
+  - `port` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set target port when using `pingtcp.send()`. _Default: `80`_
+  - `ports` [`<Array>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) Set target ports when using `pingtcp.scan()`.
+  - `timeout` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set timeout. _Default: `2000`_
+  - `dnsResolve` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
+  - `dnsServer` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set DNS server to resolve DNS records.
+  - `filterBogon` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) [Filter bogon ip address](https://en.wikipedia.org/wiki/Bogon_filtering) in `host`. _Default: `true`_
 
 ### `pingtcp.send()`
 
@@ -175,7 +177,7 @@ Some of examples in [Usage](#usage).
 
 ### `pingtcp.scan()`
 
-Scan ports using TCP ping. Return result on Event: [`'result'`]().
+Scan ports using TCP ping. Return result on Event: [`'result'`](#event-result).
 See some of examples in [Usage](#usage).
 
 ## Class: `pingus.PingUDP` Extends: [`pingus.Ping`](#class-pingusping)
@@ -185,16 +187,16 @@ Class for UDP ping.<br>
 
 ### `new PingUDP(options)`
 
-- `options` [`<Object>`]()
-  - `host` [`<string>`]() Set target hostname (domain) or ip address.
-  - `port` [`<number>`]() Set target port when using `pingudp.send()`. _Default: `68`_
-  - `ports` [`<Array>`]() Set target ports when using `pingudp.scan()`.
-  - `bytes` [`<number>`]() Set random bytes length when send on UDP ping socket connected. Ignored when `body` options set. _Default: `32`_
-  - `body` [`<string>`]() Set body when send on UDP ping socket connected.
-  - `timeout` [`<number>`]() Set timeout. _Default: `2000`_
-  - `dnsResolve` [`<boolean>`]() Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
-  - `dnsServer` [`<string>`]() Set DNS server to resolve DNS records.
-  - `filterBogon` [`<boolean>`]() [Filter bogon ip address](https://en.wikipedia.org/wiki/Bogon_filtering) in `host`. _Default: `true`_
+- `options` [`<Object>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
+  - `host` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set target hostname (domain) or ip address.
+  - `port` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set target port when using `pingudp.send()`. _Default: `68`_
+  - `ports` [`<Array>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) Set target ports when using `pingudp.scan()`.
+  - `bytes` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set random bytes length when send on UDP ping socket connected. Ignored when `body` options set. _Default: `32`_
+  - `body` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set body when send on UDP ping socket connected.
+  - `timeout` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set timeout. _Default: `2000`_
+  - `dnsResolve` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
+  - `dnsServer` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set DNS server to resolve DNS records.
+  - `filterBogon` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) [Filter bogon ip address](https://en.wikipedia.org/wiki/Bogon_filtering) in `host`. _Default: `true`_
 
 ### `pingudp.send()`
 
@@ -204,7 +206,7 @@ Some of examples in [Usage](#usage).
 ### `pingudp.scan()`
 
 Similar with [`pingtcp.scan()`](#pingtcpscan).<br>
-Scan ports using UDP ping. Return result on Event: [`'result'`]().
+Scan ports using UDP ping. Return result on Event: [`'result'`](#event-result).
 See some of examples in [Usage](#usage).
 
 ## Class: `pingus.PingICMP` Extends: [`pingus.Ping`](#class-pingusping)
@@ -215,13 +217,13 @@ Class for ICMP ping.
 
 ### `new PingICMP(options)`
 
-- `options` [`<Object>`]()
-  - `host` [`<string>`]() Set target hostname (domain) or ip address.
-  - `ttl` [`<number>`]() Set ttl. _Default: `128`_
-  - `timeout` [`<number>`]() Set timeout. _Default: `2000`_
-  - `dnsResolve` [`<boolean>`]() Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
-  - `dnsServer` [`<string>`]() Set DNS server to resolve DNS records.
-  - `filterBogon` [`<boolean>`]() [Filter bogon ip address](https://en.wikipedia.org/wiki/Bogon_filtering) in `host`. _Default: `true`_
+- `options` [`<Object>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
+  - `host` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set target hostname (domain) or ip address.
+  - `ttl` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set ttl. _Default: `128`_
+  - `timeout` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set timeout. _Default: `2000`_
+  - `dnsResolve` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
+  - `dnsServer` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set DNS server to resolve DNS records.
+  - `filterBogon` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) [Filter bogon ip address](https://en.wikipedia.org/wiki/Bogon_filtering) in `host`. _Default: `true`_
 
 ### `pingicmp.send()`
 
@@ -234,9 +236,28 @@ WIP
 
 ## `pingus.tcp(options[, callback])`
 
+Send TCP ping using [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
+See some of examples in [Send Ping Styles](#send-ping-styles).
+
 ## `pingus.udp(options[, callback])`
 
+Send UDP ping using [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
+See some of examples in [Send Ping Styles](#send-ping-styles).
+
 ## `pingus.icmp(options[, callback])`
+
+Send ICMP ping using [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
+See some of examples in [Send Ping Styles](#send-ping-styles).
+
+## `pingus.tcpscan(options[, callback])`
+
+Scan ports using TCP ping in [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
+See some of examples in [Send Ping Styles](#send-ping-styles).
+
+## `pingus.udpscan(options[, callback])`
+
+Scan ports using UDP ping in [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
+See some of examples in [Send Ping Styles](#send-ping-styles).
 
 # Usage
 

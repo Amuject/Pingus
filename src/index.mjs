@@ -1,6 +1,6 @@
 import { PingTCP, PingUDP, PingICMP } from './ping.mjs';
 import RangeScanner from './rangescanner.mjs';
-import ping_promise from './ping-promise.mjs';
+import pingf from './ping-func.mjs';
 
 export { PingTCP, PingUDP, PingICMP };
 
@@ -9,7 +9,9 @@ export default {
   PingUDP: PingUDP,
   PingICMP: PingICMP,
   RangeScanner: RangeScanner,
-  tcp: ping_promise.tcp,
-  udp: ping_promise.udp,
-  icmp: ping_promise.icmp,
+  tcp: pingf.tcp,
+  udp: pingf.udp,
+  icmp: pingf.icmp,
+  tcpscan: pingf.tcpscan,
+  udpscan: pingf.udpscan,
 };
