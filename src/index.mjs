@@ -14,4 +14,5 @@ export default {
   icmp: pingf.icmp,
   tcpscan: pingf.tcpscan,
   udpscan: pingf.udpscan,
+  traceroute: pingf.traceroute,
 };

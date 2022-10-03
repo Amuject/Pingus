@@ -75,10 +75,26 @@ function udpscan(options, callback = () => {}) {
   });
 }
 
+function traceroute(options, callback = () => {}) {
+  return new Promise((resolve, reject) => {
+    new PingICMP(options)
+      .on('result', (result) => {
+        resolve(result);
+        callback(null, result);
+      })
+      .on('error', (error, result) => {
+        reject(result);
+        callback(error, result);
+      })
+      .traceroute();
+  });
+}
+
 export default {
   tcp: tcp,
   udp: udp,
   icmp: icmp,
   tcpscan: tcpscan,
   udpscan: udpscan,
+  traceroute: traceroute,
 };

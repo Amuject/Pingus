@@ -30,6 +30,8 @@ class Ping extends EventEmitter {
 
     this.options.host = this.options.host.toLowerCase();
 
+    this.id = this.genid();
+
     this.result = {
       error: undefined,
       type: 'ping',
@@ -39,6 +41,18 @@ class Ping extends EventEmitter {
       ips: [],
       time: -1,
     };
+  }
+
+  genid() {
+    return randomString(16);
+    function randomString(length, pool = '0123456789abcdef') {
+      pool = pool.split('');
+      let string = '';
+      for (let i = 0; i < length; i++) {
+        string += pool[Math.floor(Math.random() * pool.length)];
+      }
+      return string;
+    }
   }
 
   async dnsResolve() {
@@ -431,10 +445,10 @@ class PingICMP extends Ping {
   async send(inner) {
     this.options.ttl = Math.max(
       1,
-      Math.min(65535, this.options.ttl ? this.options.ttl * 1 : 128)
+      Math.min(256, this.options.ttl ? this.options.ttl * 1 : 128)
     );
     this.options.bytes = Math.max(
-      1,
+      24,
       Math.min(65535, this.options.bytes ? this.options.bytes * 1 : 32)
     );
 
@@ -459,20 +473,21 @@ class PingICMP extends Ping {
 
     this.emit('ready', this.result);
 
+    this.addressFamily = new IP(this.result.ip).is4
+      ? raw.AddressFamily.IPv4
+      : raw.AddressFamily.IPv6;
+    this.protocol = new IP(this.result.ip).is4
+      ? raw.Protocol.ICMP
+      : raw.Protocol.ICMPv6;
+
     return new Promise((resolve, reject) => {
-      const socket = raw.createSocket(
-        new IP(this.result.ip).is4
-          ? {
-              addressFamily: raw.AddressFamily.IPv4,
-              protocol: raw.Protocol.ICMP,
-            }
-          : {
-              addressFamily: raw.AddressFamily.IPv6,
-              protocol: raw.Protocol.ICMPv6,
-            }
-      );
+      const socket = raw.createSocket({
+        addressFamily: this.addressFamily,
+        protocol: this.protocol,
+      });
       const timestamp = new Date().getTime();
-      const buffer = this.createBuffer(this.options.body || '');
+      const body = this.#randomString(this.options.bytes - 24);
+      const buffer = this.#createBuffer('abcdefgh' || '');
       const sto = setTimeout(() => {
         if (this.result.status == 'ready') {
           this.result.time = new Date().getTime() - timestamp;
@@ -482,21 +497,18 @@ class PingICMP extends Ping {
       }, this.options.timeout);
 
       socket.on('message', (data, source) => {
+        const parsed = this.#parseBuffer(Buffer.from(data), source);
+        if (parsed == null) {
+          return;
+        }
+
         clearTimeout(sto);
 
-        const buf = Buffer.from(data);
-        let off = 20;
-        if (!new IP(this.result.ip).is4) {
-          off = 0;
-        }
-        const type = buf[off];
-        const code = buf[off + 1];
-
-        this.result.reply = this.parseReply(source, type, code);
+        this.result.reply = parsed;
 
         this.result.time = new Date().getTime() - timestamp;
         if (this.result.status == 'ready') {
-          if (type == 0) {
+          if (parsed.type == 0) {
             this.result.status = 'reply';
           } else {
             this.result.status = 'exception';
@@ -511,6 +523,7 @@ class PingICMP extends Ping {
         return;
       });
       socket.on('error', (err) => {
+        console.log(err);
         clearTimeout(sto);
 
         this.result.error = err.code || err.message || err;
@@ -518,7 +531,7 @@ class PingICMP extends Ping {
 
         socket.close();
 
-        !inner ? this.emitError(error) : null;
+        !inner ? this.emitError(err) : null;
         reject(this.result);
         return;
       });
@@ -533,7 +546,9 @@ class PingICMP extends Ping {
             new IP(this.result.ip).is4
               ? raw.SocketLevel.IPPROTO_IP
               : raw.SocketLevel.IPPROTO_IPV6,
-            raw.SocketOption.IP_TTL,
+            new IP(this.result.ip).is4
+              ? raw.SocketOption.IP_TTL
+              : raw.SocketOption.IPV6_TTL,
             this.options.ttl
           );
         },
@@ -556,7 +571,36 @@ class PingICMP extends Ping {
     });
   }
 
-  parseReply(source, type, code) {
+  #parseBuffer(buf, src) {
+    let offset = 0;
+    if (new IP(this.result.ip).is4) {
+      offset = (buf[0] & 0x0f) * 4;
+    }
+    let buffer = buf.subarray(offset);
+
+    const type = buffer.subarray(0, 1)[0];
+    const code = buffer.subarray(1, 2)[0];
+    const checksum = buffer.subarray(2, 8);
+    const id = buffer.subarray(8, 24).toString('ascii');
+    const body = buffer.subarray(24).toString('ascii');
+
+    if (type == 0 && id != this.id) {
+      return null;
+    }
+
+    const tc = this.#parseTypeCode(type, code);
+
+    return {
+      source: src,
+      type: tc.type,
+      code: tc.code,
+      typestr: tc.typestr,
+      codestr: tc.codestr,
+      body: type == 0 ? body.toString() : null,
+    };
+  }
+
+  #parseTypeCode(type, code) {
     const types = [
       'ECHO_REPLY',
       'UNASSIGNED_1',
@@ -610,7 +654,6 @@ class PingICMP extends Ping {
       codeString = type_5_codes[code] || 'UNKNOWN_CODE';
     }
     return {
-      source: source,
       type: type,
       code: code,
       typestr: typeString,
@@ -618,16 +661,95 @@ class PingICMP extends Ping {
     };
   }
 
-  createBuffer(data) {
-    const type = Buffer.from([0x08, 0x00]);
+  #createBuffer(data) {
+    const type = Buffer.from([new IP(this.result.ip).is4 ? 0x08 : 0x80, 0x00]);
     const code = Buffer.from([0x00, 0x00]);
     const checksum = Buffer.from([0x00, 0x00, 0x00, 0x00]);
+    const id = Buffer.from(this.id);
     const body = Buffer.from(data);
-    const buffer = Buffer.concat([type, code, checksum, body]);
+    const buffer = Buffer.concat([type, code, checksum, id, body]);
     return raw.writeChecksum(buffer, 2, raw.createChecksum(buffer));
   }
 
-  async traceroute() {}
+  #randomString(length, pool = '0123456789abcdef') {
+    pool = pool.split('');
+    let string = '';
+    for (let i = 0; i < length; i++) {
+      string += pool[Math.floor(Math.random() * pool.length)];
+    }
+    return string;
+  }
+
+  async traceroute(inner) {
+    this.result.type = 'ping/icmp/traceroute';
+    this.result.hops = [];
+    this.options.ttln = Math.max(
+      1,
+      Math.min(256, this.options.ttln ? this.options.ttln * 1 : 1)
+    );
+    this.options.ttlx = Math.max(
+      1,
+      Math.min(256, this.options.ttlx ? this.options.ttlx * 1 : 64)
+    );
+    this.options.timeoutx = Math.max(
+      1,
+      Math.min(256, this.options.timeoutx ? this.options.timeoutx * 1 : 8)
+    );
+
+    if (!inner) {
+      try {
+        await this.ready();
+      } catch (error) {
+        this.result.status = 'error';
+        this.result.error = error.code || error.message || error;
+        !inner ? this.emitError(error) : null;
+        throw this.result;
+      }
+    } else {
+      this.result.status = 'ready';
+    }
+
+    const timestamp = new Date().getTime();
+
+    let timeoutstack = 0;
+    for (let i = this.options.ttln; i <= this.options.ttlx; i++) {
+      const opts = JSON.parse(JSON.stringify(this.options));
+      opts.ttl = i;
+      const result = await new PingICMP(opts).send();
+
+      const hop = {
+        status: result.status,
+        ip: result?.reply?.source,
+        ttl: i + 1,
+      };
+
+      if (result.status == 'exception') {
+        hop.status = result.reply.typestr.toLowerCase();
+      }
+
+      if (result.status == 'timeout') {
+        hop.ip = null;
+        timeoutstack++;
+      } else {
+        timeoutstack = 0;
+      }
+
+      this.result.hops.push(hop);
+
+      if (result?.reply?.source == this.result.ip) {
+        break;
+      }
+      if (timeoutstack >= this.options.timeoutx) {
+        break;
+      }
+    }
+
+    this.result.status = 'finish';
+
+    this.result.time = new Date().getTime() - timestamp;
+    this.emitResult();
+    return this.result;
+  }
 }
 
 export { PingTCP, PingUDP, PingICMP };

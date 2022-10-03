@@ -1,7 +1,8 @@
 # Pingus
 
 A simple ping tool.
-Supports TCP / UDP / ICMP protocol.
+Supports TCP / UDP / ICMP protocol.<br>
+Currently some functions are WIP.
 
 ## Table of Content
 
@@ -24,8 +25,8 @@ Supports TCP / UDP / ICMP protocol.
   - Class: [`pingus.PingICMP`](#class-pinguspingicmp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
     - [`new PingICMP(options)`](#new-pingicmpoptions)
     - [`pingicmp.send()`](#pingicmpsend)
-    - [`pingicmp.traceroute()`](#pingicmptraceroute) _(WIP)_
-  - Class: [`pingus.RangeScanner`](#class-pingusrangescanner) _(WIP)_
+    - [`pingicmp.traceroute()`](#pingicmptraceroute)
+  - Class: [`pingus.RangeScanner`](#class-pingusrangescanner)
     - [`new RangeScanner(options)`](#new-rangescanneroptions)
   - [`pingus.tcp(options[, callback])`](#pingustcpoptions-callback)
   - [`pingus.udp(options[, callback])`](#pingusudpoptions-callback)
@@ -35,10 +36,11 @@ Supports TCP / UDP / ICMP protocol.
 - [Usage](#usage)
   - [Send Ping Styles](#send-ping-styles)
   - [TCP Ping](#tcp-ping)
-  - [UDP Ping](#udp-ping)
-  - [ICMP Ping](#icmp-ping)
   - [Scan TCP Ports](#scan-tcp-ports)
+  - [UDP Ping](#udp-ping)
   - [Scan UDP Ports](#scan-udp-ports)
+  - [ICMP Ping](#icmp-ping)
+  - [Traceroute](#traceroute)
   - [Using RangeScanner](#using-rangescanner) _(WIP)_
 
 ## Installation
@@ -220,7 +222,10 @@ Class for ICMP ping.
 - `options` [`<Object>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
   - `host` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set target hostname (domain) or ip address.
   - `ttl` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set ttl. _Default: `128`_
+  - `ttln` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set start ttl when using [`pingicmp.traceroute()`](#pingicmptraceroute). _Default: `1`_
+  - `ttlx` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set max ttl when using [`pingicmp.traceroute()`](#pingicmptraceroute). _Default: `64`_
   - `timeout` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set timeout. _Default: `2000`_
+  - `timeoutx` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set max timeout-stack when using [`pingicmp.traceroute()`](#pingicmptraceroute). _Default: `8`_
   - `dnsResolve` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
   - `dnsServer` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set DNS server to resolve DNS records.
   - `filterBogon` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) [Filter bogon ip address](https://en.wikipedia.org/wiki/Bogon_filtering) in `host`. _Default: `true`_
@@ -232,7 +237,8 @@ Some of examples in [Usage](#usage).
 
 ### `pingicmp.traceroute()`
 
-WIP
+Run traceroute.
+Some of examples in [Usage](#usage).
 
 ## `pingus.tcp(options[, callback])`
 
@@ -375,6 +381,57 @@ new pingus.PingTCP({ host: 'localhost', port: 22 })
 
 </details>
 
+## Scan TCP Ports
+
+```js
+// TCP ping scan to localhost
+new pingus.PingTCP({
+  host: 'localhost',
+  ports: [21, 22, 80, 443, 3306, 8080],
+})
+  .on('result', (result) => {
+    console.log(result);
+  })
+  .on('error', (err, result) => {
+    throw err;
+  })
+  .scan();
+```
+
+<details><summary>Result (Console Output)</summary>
+
+```js
+{
+  error: undefined,
+  type: 'ping/tcp/scan',
+  status: 'finish',
+  host: 'localhost',
+  ip: '127.0.0.1',
+  ips: [ '127.0.0.1' ],
+  time: 2008,
+  ports: [ 21, 22, 80, 443, 3306, 8080 ],
+  statuses: {
+    open: [ 22, 80, 8080 ],
+    reset: [],
+    close: [ 21, 443, 3306 ],
+    filtered: [],
+    error: []
+  },
+  names: {
+    '21': 'ftp',
+    '22': 'ssh',
+    '80': 'http',
+    '443': 'https',
+    '3306': 'mysql',
+    '8080': 'http-alt'
+  },
+  banners: { '22': 'SSH-2.0-OpenSSH_8.9p1 Ubuntu-3' },
+  errors: {}
+}
+```
+
+</details>
+
 ## UDP Ping
 
 ```js
@@ -402,6 +459,56 @@ new pingus.PingUDP({ host: 'localhost', port: 19132 })
   time: 2,
   port: 19132,
   name: 'minecraft-be'
+}
+```
+
+</details>
+
+## Scan UDP Ports
+
+```js
+// UDP ping scan to localhost
+new pingus.PingUDP({
+  host: 'localhost',
+  ports: [67, 68, 161, 162, 445],
+})
+  .on('result', (result) => {
+    console.log(result);
+  })
+  .on('error', (err, result) => {
+    throw err;
+  })
+  .scan();
+```
+
+<details><summary>Result (Console Output)</summary>
+
+```js
+{
+  error: undefined,
+  type: 'ping/udp/scan',
+  status: 'finish',
+  host: 'localhost',
+  ip: '127.0.0.1',
+  ips: [ '127.0.0.1' ],
+  time: 2003,
+  ports: [ 67, 68, 161, 162, 445 ],
+  statuses: {
+    open: [ 68 ],
+    reset: [],
+    close: [ 67, 161, 162, 445 ],
+    filtered: [],
+    error: []
+  },
+  names: {
+    '67': 'bootps',
+    '68': 'bootpc',
+    '161': 'snmp',
+    '162': 'snmptrap',
+    '445': 'microsoft-ds'
+  },
+  banners: {},
+  errors: {}
 }
 ```
 
@@ -483,21 +590,18 @@ new pingus.PingICMP({ host: 'example.com', ttl: 10 })
 
 </details>
 
-## Scan TCP Ports
+## Traceroute
 
 ```js
-// TCP ping scan to localhost
-new pingus.PingTCP({
-  host: 'localhost',
-  ports: [21, 22, 80, 443, 3306, 8080],
-})
+// Traceroute to example.com
+new pingus.PingICMP({ host: 'example.com', timeout: 500 })
   .on('result', (result) => {
     console.log(result);
   })
   .on('error', (err, result) => {
     throw err;
   })
-  .scan();
+  .traceroute();
 ```
 
 <details><summary>Result (Console Output)</summary>
@@ -505,80 +609,25 @@ new pingus.PingTCP({
 ```js
 {
   error: undefined,
-  type: 'ping/tcp/scan',
+  type: 'ping/icmp/traceroute',
   status: 'finish',
-  host: 'localhost',
-  ip: '127.0.0.1',
-  ips: [ '127.0.0.1' ],
-  time: 2008,
-  ports: [ 21, 22, 80, 443, 3306, 8080 ],
-  statuses: {
-    open: [ 22, 80, 8080 ],
-    reset: [],
-    close: [ 21, 443, 3306 ],
-    filtered: [],
-    error: []
-  },
-  names: {
-    '21': 'ftp',
-    '22': 'ssh',
-    '80': 'http',
-    '443': 'https',
-    '3306': 'mysql',
-    '8080': 'http-alt'
-  },
-  banners: { '22': 'SSH-2.0-OpenSSH_8.9p1 Ubuntu-3' },
-  errors: {}
-}
-```
-
-</details>
-
-## Scan UDP Ports
-
-```js
-// UDP ping scan to localhost
-new pingus.PingUDP({
-  host: 'localhost',
-  ports: [67, 68, 161, 162, 445],
-})
-  .on('result', (result) => {
-    console.log(result);
-  })
-  .on('error', (err, result) => {
-    throw err;
-  })
-  .scan();
-```
-
-<details><summary>Result (Console Output)</summary>
-
-```js
-{
-  error: undefined,
-  type: 'ping/udp/scan',
-  status: 'finish',
-  host: 'localhost',
-  ip: '127.0.0.1',
-  ips: [ '127.0.0.1' ],
-  time: 2003,
-  ports: [ 67, 68, 161, 162, 445 ],
-  statuses: {
-    open: [ 68 ],
-    reset: [],
-    close: [ 67, 161, 162, 445 ],
-    filtered: [],
-    error: []
-  },
-  names: {
-    '67': 'bootps',
-    '68': 'bootpc',
-    '161': 'snmp',
-    '162': 'snmptrap',
-    '445': 'microsoft-ds'
-  },
-  banners: {},
-  errors: {}
+  host: 'example.com',
+  ip: '93.184.216.34',
+  ips: [ '93.184.216.34', '2606:2800:220:1:248:1893:25c8:1946' ],
+  time: 1174,
+  hops: [
+    { status: 'time_exceeded', ip: '10.0.0.1', ttl: 2 },
+    { status: 'time_exceeded', ip: '121.175.134.1', ttl: 3 },
+    { status: 'time_exceeded', ip: '112.173.92.9', ttl: 4 },
+    { status: 'time_exceeded', ip: '112.174.173.177', ttl: 5 },
+    { status: 'timeout', ip: null, ttl: 6 },
+    { status: 'time_exceeded', ip: '112.190.28.17', ttl: 7 },
+    { status: 'time_exceeded', ip: '112.174.91.82', ttl: 8 },
+    { status: 'time_exceeded', ip: '112.174.87.102', ttl: 9 },
+    { status: 'time_exceeded', ip: '206.223.123.14', ttl: 10 },
+    { status: 'time_exceeded', ip: '152.195.76.133', ttl: 11 },
+    { status: 'reply', ip: '93.184.216.34', ttl: 12 }
+  ]
 }
 ```
 
