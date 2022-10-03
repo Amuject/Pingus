@@ -26,13 +26,14 @@ Currently some functions are WIP.
     - [`new PingICMP(options)`](#new-pingicmpoptions)
     - [`pingicmp.send()`](#pingicmpsend)
     - [`pingicmp.traceroute()`](#pingicmptraceroute)
-  - Class: [`pingus.RangeScanner`](#class-pingusrangescanner)
-    - [`new RangeScanner(options)`](#new-rangescanneroptions)
+  - Class: [`pingus.RangeScanner`](#class-pingusrangescanner) _(WIP)_
+    - [`new RangeScanner(options)`](#new-rangescanneroptions) _(WIP)_
   - [`pingus.tcp(options[, callback])`](#pingustcpoptions-callback)
-  - [`pingus.udp(options[, callback])`](#pingusudpoptions-callback)
-  - [`pingus.icmp(options[, callback])`](#pingusicmpoptions-callback)
   - [`pingus.tcpscan(options[, callback])`](#pingustcpscanoptions-callback)
+  - [`pingus.udp(options[, callback])`](#pingusudpoptions-callback)
   - [`pingus.udpscan(options[, callback])`](#pingusudpscanoptions-callback)
+  - [`pingus.icmp(options[, callback])`](#pingusicmpoptions-callback)
+  - [`pingus.traceroute(options[, callback])`](#pingusudpscanoptions-callback)
 - [Usage](#usage)
   - [Send Ping Styles](#send-ping-styles)
   - [TCP Ping](#tcp-ping)
@@ -245,9 +246,19 @@ Some of examples in [Usage](#usage).
 Send TCP ping using [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
 See some of examples in [Send Ping Styles](#send-ping-styles).
 
+## `pingus.tcpscan(options[, callback])`
+
+Scan ports using TCP ping in [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
+See some of examples in [Send Ping Styles](#send-ping-styles).
+
 ## `pingus.udp(options[, callback])`
 
 Send UDP ping using [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
+See some of examples in [Send Ping Styles](#send-ping-styles).
+
+## `pingus.udpscan(options[, callback])`
+
+Scan ports using UDP ping in [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
 See some of examples in [Send Ping Styles](#send-ping-styles).
 
 ## `pingus.icmp(options[, callback])`
@@ -255,14 +266,9 @@ See some of examples in [Send Ping Styles](#send-ping-styles).
 Send ICMP ping using [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
 See some of examples in [Send Ping Styles](#send-ping-styles).
 
-## `pingus.tcpscan(options[, callback])`
+## `pingus.traceroute(options[, callback])`
 
-Scan ports using TCP ping in [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
-See some of examples in [Send Ping Styles](#send-ping-styles).
-
-## `pingus.udpscan(options[, callback])`
-
-Scan ports using UDP ping in [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
+Run traceroute using [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
 See some of examples in [Send Ping Styles](#send-ping-styles).
 
 # Usage
