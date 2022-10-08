@@ -1,6 +1,6 @@
 {
   "name": "pingus",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple network ping tool",
   "author": "Wany <sung@wany.io> (https://wany.io)",
   "main": "lib/index.js",
@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@wanyne/dns": "^1.1.5",
-    "@wanyne/ip": "^1.2.0",
+    "@wanyne/ip": "^1.2.1",
     "raw-socket": "^1.7.0"
   },
   "devDependencies": {
