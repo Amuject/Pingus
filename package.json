@@ -1,6 +1,6 @@
 {
   "name": "pingus",
-  "version": "0.6.3",
+  "version": "1.0.0",
   "description": "A simple network ping tool",
   "author": "Wany <sung@wany.io> (https://wany.io)",
   "main": "lib/index.js",

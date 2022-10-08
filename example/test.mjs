@@ -2,8 +2,9 @@ import pingus from 'pingus';
 
 // UDP ping scan to localhost
 pingus
-  .traceroute({
-    host: 'example.com',
+  .tcpscan({
+    host: 'server-pingo.wnynya.com',
     timeout: 500,
+    ports: '20-24,80,443',
   })
   .then(console.log);
