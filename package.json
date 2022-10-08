@@ -1,7 +1,7 @@
 {
   "name": "pingus",
-  "version": "1.0.7",
-  "description": "A simple network ping tool",
+  "version": "1.0.8",
+  "description": "A simple network ping tool. Supports TCP / UDP / ICMP protocol.",
   "author": "Wany <sung@wany.io> (https://wany.io)",
   "main": "lib/index.js",
   "exports": {
@@ -17,7 +17,8 @@
     "scan",
     "scanner",
     "banner",
-    "cli",
+    "bannergrab",
+    "traceroute",
     "net",
     "dgram"
   ],
@@ -27,7 +28,7 @@
     "url": "https://github.com/wnynya/Pingus.git"
   },
   "scripts": {
-    "pingo": "node lib/index.js",
+    "pingus": "node lib/index.js",
     "babel": "npx babel src --out-file-extension .js --out-dir lib"
   },
   "dependencies": {
