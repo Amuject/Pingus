@@ -61,7 +61,7 @@ class Ping extends EventEmitter {
           for (let i = 1; i <= 65535; i++) {
             this.options.ports.push(i);
           }
-        } else {
+        } else if (this.options.ports != '@') {
           this.options.ports = [this.options.ports * 1];
         }
       }
