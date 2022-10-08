@@ -4,6 +4,7 @@
   "description": "A simple network ping tool. Supports TCP / UDP / ICMP protocol.",
   "author": "Wany <sung@wany.io> (https://wany.io)",
   "main": "lib/index.js",
+  "license": "MIT",
   "exports": {
     "require": "./lib/index.js",
     "import": "./src/index.mjs"
