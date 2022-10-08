@@ -13,7 +13,7 @@ const host = 'wany.io';
   .then(console.log)
   .catch(console.warn);*/
 pingus
-  .tcpscan({ host: host, ports: '1234' })
+  .tcpscan({ host: host, ports: '@' })
   .then((res) => {
     delete res.names;
     console.log(res);

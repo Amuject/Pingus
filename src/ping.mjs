@@ -65,12 +65,14 @@ class Ping extends EventEmitter {
           this.options.ports = [this.options.ports * 1];
         }
       }
-      const pr = JSON.parse(JSON.stringify(this.options.ports));
-      this.options.ports = [];
-      for (let p of pr) {
-        p = p * 1;
-        if (!Number.isNaN(p)) {
-          this.options.ports.push(p);
+      if (this.options.ports != '@') {
+        const pr = JSON.parse(JSON.stringify(this.options.ports));
+        this.options.ports = [];
+        for (let p of pr) {
+          p = p * 1;
+          if (!Number.isNaN(p)) {
+            this.options.ports.push(p);
+          }
         }
       }
     }
