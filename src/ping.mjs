@@ -252,7 +252,7 @@ class PingTCP extends Ping {
       this.result.status = 'error';
       this.result.error = error.code || error.message || error;
       !inner ? this.emitError(error) : null;
-      throw this.result;
+      return;
     }
 
     const timestamp = new Date().getTime();
