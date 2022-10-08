@@ -622,17 +622,17 @@ new pingus.PingICMP({ host: 'example.com', timeout: 500 })
   ips: [ '93.184.216.34', '2606:2800:220:1:248:1893:25c8:1946' ],
   time: 1174,
   hops: [
-    { status: 'time_exceeded', ip: '10.0.0.1', ttl: 2 },
-    { status: 'time_exceeded', ip: '121.175.134.1', ttl: 3 },
-    { status: 'time_exceeded', ip: '112.173.92.9', ttl: 4 },
-    { status: 'time_exceeded', ip: '112.174.173.177', ttl: 5 },
-    { status: 'timeout', ip: null, ttl: 6 },
-    { status: 'time_exceeded', ip: '112.190.28.17', ttl: 7 },
-    { status: 'time_exceeded', ip: '112.174.91.82', ttl: 8 },
-    { status: 'time_exceeded', ip: '112.174.87.102', ttl: 9 },
-    { status: 'time_exceeded', ip: '206.223.123.14', ttl: 10 },
-    { status: 'time_exceeded', ip: '152.195.76.133', ttl: 11 },
-    { status: 'reply', ip: '93.184.216.34', ttl: 12 }
+    { status: 'time_exceeded', ip: '10.0.0.1', ttl: 1 },
+    { status: 'time_exceeded', ip: '121.175.134.1', ttl: 2 },
+    { status: 'time_exceeded', ip: '112.173.92.9', ttl: 3 },
+    { status: 'time_exceeded', ip: '112.174.173.177', ttl: 4 },
+    { status: 'timeout', ip: null, ttl: 5 },
+    { status: 'time_exceeded', ip: '112.190.28.17', ttl: 6 },
+    { status: 'time_exceeded', ip: '112.174.91.82', ttl: 7 },
+    { status: 'time_exceeded', ip: '112.174.87.102', ttl: 8 },
+    { status: 'time_exceeded', ip: '206.223.123.14', ttl: 9 },
+    { status: 'time_exceeded', ip: '152.195.76.133', ttl: 10 },
+    { status: 'reply', ip: '93.184.216.34', ttl: 11 }
   ]
 }
 ```

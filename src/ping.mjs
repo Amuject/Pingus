@@ -720,7 +720,7 @@ class PingICMP extends Ping {
       const hop = {
         status: result.status,
         ip: result?.reply?.source,
-        ttl: i + 1,
+        ttl: i,
       };
 
       if (result.status == 'exception') {
