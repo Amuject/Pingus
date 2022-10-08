@@ -32,41 +32,46 @@ class Ping extends EventEmitter {
 
     this.options.host = this.options.host.toLowerCase();
 
-    if (typeof this.options.ports == 'string') {
-      if (
-        /^(?:\d{1,5},|\d{1,5}-\d{1,5},)+\d{1,5}|\d{1,5}-\d{1,5}/.test(
-          this.options.ports
-        )
-      ) {
-        const ports = [];
-        let parts = this.options.ports.split(',');
-        for (let part of parts) {
-          const m = /^(\d{1,5})-(\d{1,5})/.exec(part);
-          if (m) {
-            for (let i = Math.min(m[1], m[2]); i <= Math.max(m[1], m[2]); i++) {
-              ports.push(i);
+    if (this.options.ports) {
+      if (typeof this.options.ports == 'string') {
+        if (
+          /^(?:\d{1,5},|\d{1,5}-\d{1,5},)+\d{1,5}|\d{1,5}-\d{1,5}/.test(
+            this.options.ports
+          )
+        ) {
+          const ports = [];
+          let parts = this.options.ports.split(',');
+          for (let part of parts) {
+            const m = /^(\d{1,5})-(\d{1,5})/.exec(part);
+            if (m) {
+              for (
+                let i = Math.min(m[1], m[2]);
+                i <= Math.max(m[1], m[2]);
+                i++
+              ) {
+                ports.push(i);
+              }
+            } else {
+              ports.push(part * 1);
             }
-          } else {
-            ports.push(part * 1);
           }
+          this.options.ports = ports;
+        } else if (this.options.ports == '*') {
+          this.options.ports = [];
+          for (let i = 1; i <= 65535; i++) {
+            this.options.ports.push(i);
+          }
+        } else {
+          this.options.ports = [this.options.ports * 1];
         }
-        this.options.ports = ports;
-      } else if (this.options.ports == '*') {
-        this.options.ports = [];
-        for (let i = 1; i <= 65535; i++) {
-          this.options.ports.push(i);
-        }
-      } else {
-        this.options.ports = [this.options.ports * 1];
       }
-    }
-
-    const pr = JSON.parse(JSON.stringify(this.options.ports));
-    this.options.ports = [];
-    for (let p of pr) {
-      p = p * 1;
-      if (!Number.isNaN(p)) {
-        this.options.ports.push(p);
+      const pr = JSON.parse(JSON.stringify(this.options.ports));
+      this.options.ports = [];
+      for (let p of pr) {
+        p = p * 1;
+        if (!Number.isNaN(p)) {
+          this.options.ports.push(p);
+        }
       }
     }
 

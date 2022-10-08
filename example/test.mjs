@@ -8,17 +8,17 @@ const host = 'wany.io';
 
 //pingus.udp({ host: host }).then(console.log).catch(console.warn);
 
-pingus
+/*pingus
   .traceroute({ host: host, timeout: 500 })
   .then(console.log)
-  .catch(console.warn);
-/*pingus
-  .tcpscan({ host: host, ports: '@' })
+  .catch(console.warn);*/
+pingus
+  .tcpscan({ host: host, ports: '1234' })
   .then((res) => {
     delete res.names;
     console.log(res);
   })
-  .catch(console.warn);*/
+  .catch(console.warn);
 /*pingus
   .udpscan({ host: host, ports: '@' })
   .then((res) => {
