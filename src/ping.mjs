@@ -56,6 +56,17 @@ class Ping extends EventEmitter {
         for (let i = 1; i <= 65535; i++) {
           this.options.ports.push(i);
         }
+      } else {
+        this.options.ports = [this.options.ports * 1];
+      }
+    }
+
+    const pr = JSON.parse(JSON.stringify(this.options.ports));
+    this.options.ports = [];
+    for (let p of pr) {
+      p = p * 1;
+      if (!Number.isNaN(p)) {
+        this.options.ports.push(p);
       }
     }
 
