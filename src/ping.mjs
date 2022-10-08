@@ -32,15 +32,17 @@ class Ping extends EventEmitter {
 
     this.options.host = this.options.host.toLowerCase();
 
+    this.options.portsx =
+      this.options.portsx != undefined ? this.options.portsx : 65536;
+
     if (this.options.ports) {
-      if (typeof this.options.ports == 'string') {
+      let ports = this.options.ports;
+      if (typeof ports == 'string') {
         if (
-          /^(?:\d{1,5},|\d{1,5}-\d{1,5},)+\d{1,5}|\d{1,5}-\d{1,5}/.test(
-            this.options.ports
-          )
+          /^(?:\d{1,5},|\d{1,5}-\d{1,5},)+\d{1,5}|\d{1,5}-\d{1,5}/.test(ports)
         ) {
-          const ports = [];
-          let parts = this.options.ports.split(',');
+          let parts = ports.split(',');
+          ports = [];
           for (let part of parts) {
             const m = /^(\d{1,5})-(\d{1,5})/.exec(part);
             if (m) {
@@ -55,26 +57,33 @@ class Ping extends EventEmitter {
               ports.push(part * 1);
             }
           }
-          this.options.ports = ports;
-        } else if (this.options.ports == '*') {
-          this.options.ports = [];
+        } else if (ports == '*') {
+          ports = [];
           for (let i = 1; i <= 65535; i++) {
-            this.options.ports.push(i);
+            ports.push(i);
           }
-        } else if (this.options.ports != '@') {
-          this.options.ports = [this.options.ports * 1];
+        } else if (ports == '@') {
+          if (this.constructor == PingTCP) {
+            ports = knownPorts.ports.tcp;
+          } else if (this.constructor == PingUDP) {
+            ports = knownPorts.ports.udp;
+          }
+        } else {
+          ports = [ports * 1];
         }
       }
-      if (this.options.ports != '@') {
-        const pr = JSON.parse(JSON.stringify(this.options.ports));
-        this.options.ports = [];
-        for (let p of pr) {
-          p = p * 1;
-          if (!Number.isNaN(p)) {
-            this.options.ports.push(p);
-          }
+      const cports = JSON.parse(JSON.stringify(ports));
+      ports = [];
+      p: for (let p of cports) {
+        p = p * 1;
+        if (!Number.isNaN(p) && 0 < p && p < 65536) {
+          ports.push(p);
+        }
+        if (this.options.portsx < ports.length) {
+          break p;
         }
       }
+      this.options.ports = ports;
     }
 
     this.id = this.genid();
@@ -124,9 +133,7 @@ class Ping extends EventEmitter {
   async ready() {
     try {
       if (this.options.dnsResolve) {
-        await this.dnsResolve().catch((error) => {
-          throw error;
-        });
+        await this.dnsResolve();
       } else {
         this.result.ip = this.options.host;
         this.result.ips = [this.result.ip];
@@ -242,10 +249,6 @@ class PingTCP extends Ping {
   }
 
   async scan(inner) {
-    if (this.options.ports == '@') {
-      this.options.ports = knownPorts.ports.tcp;
-    }
-
     this.options.ports = !this.options.ports
       ? [21, 22, 23, 25, 80, 194, 443, 3000, 3306, 5000, 8080, 25565]
       : this.options.ports;
@@ -400,10 +403,6 @@ class PingUDP extends Ping {
   }
 
   async scan(inner) {
-    if (this.options.ports == '@') {
-      this.options.ports = knownPorts.ports.udp;
-    }
-
     this.options.ports = !this.options.ports
       ? [67, 68, 69, 123, 161, 162, 445, 514, 19132]
       : this.options.ports;
