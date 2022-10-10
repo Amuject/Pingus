@@ -97,3 +97,5 @@ pingus
     console.log('tcp scan v5 host ok', result.ports);
   })
   .catch(console.warn);
+
+pingus.wol({ mac: '' }).then(console.log('wol ok')).catch(console.warn);
