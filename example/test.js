@@ -26,27 +26,21 @@ pingus
   .then((result) => {
     console.log('icmp ping u host ok');
   })
-  .catch((err) => {
-    console.log('icmp ping u host ok');
-  });
+  .catch(console.warn);
 
 pingus
   .tcp({ host: '그아아아아' })
   .then((result) => {
     console.log('tcp ping u host ok');
   })
-  .catch((err) => {
-    console.log('tcp ping u host ok');
-  });
+  .catch(console.warn);
 
 pingus
   .udp({ host: '그아아아아' })
   .then((result) => {
     console.log('udp ping u host ok');
   })
-  .catch((err) => {
-    console.log('udp ping u host ok');
-  });
+  .catch(console.warn);
 
 pingus
   .traceroute({ host: 'example.com', timeout: 500 })

@@ -1,3 +1,8 @@
 import pingus from '../src/index.mjs';
 
-pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
+pingus
+  .traceroute({ host: 'example.com', timeout: 500 })
+  .then((result) => {
+    console.log(result);
+  })
+  .catch(console.warn);
