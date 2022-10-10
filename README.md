@@ -568,12 +568,14 @@ new pingus.PingUDP({
 
 ```js
 // Send magic packet using UDP ping to 00-00-00-00-00-00
-pingus.wol({ mac: '00-00-00-00-00-00')
+pingus
+  .wol({ mac: '00-00-00-00-00-00' })
   .then((result) => {
     console.log(result);
-  }).catch((error) => {
-    throw error;
   })
+  .catch((error) => {
+    throw error;
+  });
 ```
 
 <details><summary>Result (Console Output)</summary>
