@@ -39,14 +39,16 @@ Currently some functions are WIP (IP Range Scan).
     - [`pingicmp.traceroute()`](#pingicmptraceroute)
   - Class: [`pingus.RangeScanner`](#class-pingusrangescanner) _(WIP)_
     - [`new RangeScanner(options)`](#new-rangescanneroptions) _(WIP)_
-  - [`pingus.tcp(options[, callback])`](#pingustcpoptions-callback)
-  - [`pingus.tcpscan(options[, callback])`](#pingustcpscanoptions-callback)
-  - [`pingus.udp(options[, callback])`](#pingusudpoptions-callback)
-  - [`pingus.udpscan(options[, callback])`](#pingusudpscanoptions-callback)
-  - [`pingus.wol(options[, callback])`](#pingusudpoptions-callback)
-  - [`pingus.icmp(options[, callback])`](#pingusicmpoptions-callback)
-  - [`pingus.traceroute(options[, callback])`](#pingusudpscanoptions-callback)
+  - [Using `Callback` or `Promise` (`async/await`)](#using-callback-or-promise-asyncawait)
+    - [`pingus.tcp(options[, callback])`](#pingustcpoptions-callback)
+    - [`pingus.tcpscan(options[, callback])`](#pingustcpscanoptions-callback)
+    - [`pingus.udp(options[, callback])`](#pingusudpoptions-callback)
+    - [`pingus.udpscan(options[, callback])`](#pingusudpscanoptions-callback)
+    - [`pingus.wol(options[, callback])`](#pingusudpoptions-callback)
+    - [`pingus.icmp(options[, callback])`](#pingusicmpoptions-callback)
+    - [`pingus.traceroute(options[, callback])`](#pingusudpscanoptions-callback)
 - [Usage](#usage)
+  - [Use Pingus](#use-pingus)
   - [Send Ping Styles](#send-ping-styles)
   - [TCP Ping](#tcp-ping)
   - [Scan TCP Ports](#scan-tcp-ports)
@@ -316,6 +318,8 @@ Send ICMP ping.
 Run traceroute.
 
 # Usage
+
+## Use Pingus
 
 ESM
 
