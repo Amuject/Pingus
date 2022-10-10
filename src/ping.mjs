@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
-import dns from '@wanyne/dns';
-import IP from '@wanyne/ip';
+import dns from '@wnynya/dns';
+import IP from '@wnynya/ip';
 
 import fs from 'fs';
 import path from 'path';

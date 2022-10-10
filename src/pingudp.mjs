@@ -1,5 +1,5 @@
 import dgram from 'dgram';
-import IP from '@wanyne/ip';
+import IP from '@wnynya/ip';
 import Ping from './ping.mjs';
 
 class PingUDP extends Ping {

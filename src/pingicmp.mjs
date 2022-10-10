@@ -1,5 +1,5 @@
 import raw from 'raw-socket';
-import IP from '@wanyne/ip';
+import IP from '@wnynya/ip';
 import Ping from './ping.mjs';
 
 class PingICMP extends Ping {

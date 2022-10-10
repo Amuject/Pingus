@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import IP from '@wanyne/ip';
+import IP from '@wnynya/ip';
 
 class RangeScanner extends EventEmitter {
   constructor(range, task) {
