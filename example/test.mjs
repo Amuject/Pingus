@@ -50,6 +50,13 @@ pingus
   .catch(console.warn);
 
 pingus
+  .traceroute({ host: 'fawfwafwafasfdawf', timeout: 500 })
+  .then((result) => {
+    console.log('icmp traceroute ve host ok');
+  })
+  .catch(console.warn);
+
+pingus
   .tcpscan({ host: 'example.com', ports: '20-100,10,443,5000' })
   .then((result) => {
     console.log('tcp scan v host ok');

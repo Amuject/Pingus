@@ -92,7 +92,7 @@ class PingTCP extends Ping {
     }
   }
 
-  static sendAsync(options, callback = () => {}) {
+  static sendAsync(options = {}, callback = () => {}) {
     return new Promise((resolve, reject) => {
       new PingTCP(options)
         .on('result', (result) => {
@@ -100,7 +100,7 @@ class PingTCP extends Ping {
           callback(null, result);
         })
         .on('error', (error, result) => {
-          resolve(result);
+          reject(result);
           callback(error, result);
         })
         .send();
@@ -181,7 +181,7 @@ class PingTCP extends Ping {
     return;
   }
 
-  static scanAsync(options, callback = () => {}) {
+  static scanAsync(options = {}, callback = () => {}) {
     return new Promise((resolve, reject) => {
       new PingTCP(options)
         .on('result', (result) => {
@@ -189,7 +189,7 @@ class PingTCP extends Ping {
           callback(null, result);
         })
         .on('error', (error, result) => {
-          resolve(result);
+          reject(result);
           callback(error, result);
         })
         .scan();

@@ -227,7 +227,7 @@ class PingICMP extends Ping {
     return string;
   }
 
-  static sendAsync(options, callback = () => {}) {
+  static sendAsync(options = {}, callback = () => {}) {
     return new Promise((resolve, reject) => {
       new PingICMP(options)
         .on('result', (result) => {
@@ -235,7 +235,7 @@ class PingICMP extends Ping {
           callback(null, result);
         })
         .on('error', (error, result) => {
-          resolve(result);
+          reject(result);
           callback(error, result);
         })
         .send();
@@ -313,7 +313,7 @@ class PingICMP extends Ping {
     return;
   }
 
-  static tracerouteAsync(options, callback = () => {}) {
+  static tracerouteAsync(options = {}, callback = () => {}) {
     return new Promise((resolve, reject) => {
       new PingICMP(options)
         .on('result', (result) => {
@@ -321,7 +321,7 @@ class PingICMP extends Ping {
           callback(null, result);
         })
         .on('error', (error, result) => {
-          resolve(result);
+          reject(result);
           callback(error, result);
         })
         .traceroute();

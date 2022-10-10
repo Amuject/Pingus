@@ -11,6 +11,7 @@ export default {
   tcpscan: PingTCP.scanAsync,
   udp: PingUDP.sendAsync,
   udpscan: PingUDP.scanAsync,
+  wol: PingUDP.wol,
   icmp: PingICMP.sendAsync,
   traceroute: PingICMP.tracerouteAsync,
   RangeScanner: RangeScanner,

@@ -6,6 +6,8 @@ class PingUDP extends Ping {
   async send() {
     this.options.port = this.options.port ? this.options.port * 1 : 68;
     this.options.port = Math.max(1, Math.min(65535, this.options.port));
+    this.options.bytes = this.options.bytes ? this.options.bytes * 1 : 32;
+    this.options.bytes = Math.max(24, Math.min(65535, this.options.bytes));
 
     this.result.type = 'ping/udp';
     this.result.port = this.options.port;
@@ -25,9 +27,11 @@ class PingUDP extends Ping {
     const socket = new dgram.createSocket(
       new IP(this.result.ip).is4 ? 'udp4' : 'udp6'
     );
-    const buffer = this.options.body
+    const buffer = this.options.buffer
+      ? this.options.buffer
+      : this.options.body
       ? Buffer.from(this.options.body)
-      : Buffer.alloc(32);
+      : Buffer.alloc(this.options.bytes);
 
     let timeout;
 
@@ -53,26 +57,47 @@ class PingUDP extends Ping {
       }
     });
 
-    socket.connect(this.result.port, this.result.ip, () => {
-      socket.send(buffer, (error, bytes) => {
-        if (error) {
-          this.result.status = 'error';
-          this.result.error = error;
-          this.emitError(error);
-          return;
-        }
-
-        this.result.status = 'open';
-        this.result.ip = socket.remoteAddress().address;
-        this.result.time = new Date().getTime() - timestamp;
-        timeout = setTimeout(() => {
-          socket.close();
-        }, this.options.timeout);
-      });
+    socket.on('listening', () => {
+      if (this.options.broadcast) {
+        socket.setBroadcast(true);
+      }
     });
+
+    const concb = (error, bytes) => {
+      if (error) {
+        this.result.status = 'error';
+        this.result.error = error;
+        this.emitError(error);
+        return;
+      }
+
+      this.result.status = 'open';
+      try {
+        this.result.ip = socket.remoteAddress().address;
+      } catch (error) {}
+      this.result.time = new Date().getTime() - timestamp;
+      timeout = setTimeout(() => {
+        socket.close();
+      }, this.options.timeout);
+    };
+
+    if (this.options.broadcast) {
+      socket.send(
+        buffer,
+        0,
+        buffer.length,
+        this.result.port,
+        this.result.ip,
+        concb
+      );
+    } else {
+      socket.connect(this.result.port, this.result.ip, () => {
+        socket.send(buffer, concb);
+      });
+    }
   }
 
-  static sendAsync(options, callback = () => {}) {
+  static sendAsync(options = {}, callback = () => {}) {
     return new Promise((resolve, reject) => {
       new PingUDP(options)
         .on('result', (result) => {
@@ -80,7 +105,7 @@ class PingUDP extends Ping {
           callback(null, result);
         })
         .on('error', (error, result) => {
-          resolve(result);
+          reject(result);
           callback(error, result);
         })
         .send();
@@ -160,7 +185,7 @@ class PingUDP extends Ping {
     return;
   }
 
-  static scanAsync(options, callback = () => {}) {
+  static scanAsync(options = {}, callback = () => {}) {
     return new Promise((resolve, reject) => {
       new PingUDP(options)
         .on('result', (result) => {
@@ -168,10 +193,41 @@ class PingUDP extends Ping {
           callback(null, result);
         })
         .on('error', (error, result) => {
-          resolve(result);
+          reject(result);
           callback(error, result);
         })
         .scan();
+    });
+  }
+
+  static wol(options = {}, callback = () => {}) {
+    return new Promise((resolve, reject) => {
+      let header = Buffer.from([0xff, 0xff, 0xff, 0xff, 0xff, 0xff]);
+      let mac = options.mac || '00-00-00-00-00-00';
+      mac = mac.toLowerCase();
+      mac = mac.replace(/[^0-9a-f]/g, '');
+      let macfer = Buffer.alloc(6);
+      for (let i = 0; i < 6; i++) {
+        macfer[i] = parseInt(mac.substring(i * 2, i * 2 + 2), 16);
+      }
+      let buffer = header;
+      for (let i = 0; i < 16; i++) {
+        buffer = Buffer.concat([buffer, macfer]);
+      }
+      options.buffer = buffer;
+      options.broadcast = true;
+      options.host = options.host ? options.host : '255.255.255.255';
+      options.port = options.port ? options.port : 9;
+      new PingUDP(options)
+        .on('result', (result) => {
+          resolve(result);
+          callback(null, result);
+        })
+        .on('error', (error, result) => {
+          reject(result);
+          callback(error, result);
+        })
+        .send();
     });
   }
 }

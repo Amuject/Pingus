@@ -5,9 +5,11 @@ Supports TCP / UDP / ICMP protocol.**
 
 <br>
 
-Send ICMP echo request & ttl traceroute.
+Pingus can...
 
-Send ping, scan to TCP / UDP ports & banner grabbing.
+> _Send ICMP echo request & ttl traceroute.<br>
+> Send ping, scan to TCP / UDP ports & banner grabbing.<br>
+> Send magic packet (Wake on LAN) using UDP ping._
 
 <br>
 
@@ -41,6 +43,7 @@ Currently some functions are WIP (IP Range Scan).
   - [`pingus.tcpscan(options[, callback])`](#pingustcpscanoptions-callback)
   - [`pingus.udp(options[, callback])`](#pingusudpoptions-callback)
   - [`pingus.udpscan(options[, callback])`](#pingusudpscanoptions-callback)
+  - [`pingus.wol(options[, callback])`](#pingusudpoptions-callback)
   - [`pingus.icmp(options[, callback])`](#pingusicmpoptions-callback)
   - [`pingus.traceroute(options[, callback])`](#pingusudpscanoptions-callback)
 - [Usage](#usage)
@@ -49,6 +52,7 @@ Currently some functions are WIP (IP Range Scan).
   - [Scan TCP Ports](#scan-tcp-ports)
   - [UDP Ping](#udp-ping)
   - [Scan UDP Ports](#scan-udp-ports)
+  - [Wake on LAN](#wake-on-lan)
   - [ICMP Ping](#icmp-ping)
   - [Traceroute](#traceroute)
 
@@ -228,8 +232,9 @@ Class for UDP ping.<br>
   - `host` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set target hostname (domain) or ip address.
   - `port` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set target port when using `pingudp.send()`. _Default: `68`_
   - `ports` [`<Array>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)|[`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set target ports when using `pingudp.scan()`. Use array of port numbers or query strings. Same as PingTCP. See [example](#example-of-optionsports).
+  - `buffer` [`<Buffer>`](https://nodejs.org/api/buffer.html) Set buffer when send on UDP ping socket connected.
+  - `body` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set body when send on UDP ping socket connected. Ignored when `buffer` options set.
   - `bytes` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set random bytes length when send on UDP ping socket connected. Ignored when `body` options set. _Default: `32`_
-  - `body` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set body when send on UDP ping socket connected.
   - `timeout` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set timeout. _Default: `2000`_
   - `dnsResolve` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
   - `dnsServer` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set DNS server to resolve DNS records.
@@ -275,35 +280,40 @@ Some of examples in [Usage](#usage).
 Run traceroute.
 Some of examples in [Usage](#usage).
 
+## Using [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function))
+
+See examples in [Send Ping Styles](#send-ping-styles).
+
 ## `pingus.tcp(options[, callback])`
 
-Send TCP ping using [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
-See some of examples in [Send Ping Styles](#send-ping-styles).
+Send TCP ping.
 
 ## `pingus.tcpscan(options[, callback])`
 
-Scan ports using TCP ping in [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
-See some of examples in [Send Ping Styles](#send-ping-styles).
+Scan ports using TCP ping.
 
 ## `pingus.udp(options[, callback])`
 
-Send UDP ping using [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
-See some of examples in [Send Ping Styles](#send-ping-styles).
+Send UDP ping.
 
 ## `pingus.udpscan(options[, callback])`
 
-Scan ports using UDP ping in [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
-See some of examples in [Send Ping Styles](#send-ping-styles).
+Scan ports using UDP ping.
+
+## `pingus.wol(options[, callback])`
+
+- `options` [`<Object>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) Same as options of [`new PingUDP(options)`](#new-pingudpoptions)
+  - `mac` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set target [MAC](https://en.wikipedia.org/wiki/MAC_address) address.
+
+Send [magic packet](https://en.wikipedia.org/wiki/Wake-on-LAN#Magic_packet) UDP ping to use [WOL](https://en.wikipedia.org/wiki/Wake-on-LAN) feature.
 
 ## `pingus.icmp(options[, callback])`
 
-Send ICMP ping using [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
-See some of examples in [Send Ping Styles](#send-ping-styles).
+Send ICMP ping.
 
 ## `pingus.traceroute(options[, callback])`
 
-Run traceroute using [`Callback`](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) or [`Promise`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise) ([`async/await`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/async_function)).<br>
-See some of examples in [Send Ping Styles](#send-ping-styles).
+Run traceroute.
 
 # Usage
 
@@ -549,6 +559,36 @@ new pingus.PingUDP({
   },
   banners: {},
   errors: {}
+}
+```
+
+</details>
+
+## Wake on LAN
+
+```js
+// Send magic packet using UDP ping to 00-00-00-00-00-00
+pingus.wol({ mac: '00-00-00-00-00-00')
+  .then((result) => {
+    console.log(result);
+  }).catch((error) => {
+    throw error;
+  })
+```
+
+<details><summary>Result (Console Output)</summary>
+
+```js
+{
+  error: undefined,
+  type: 'ping/udp',
+  status: 'open',
+  host: '255.255.255.255',
+  ip: '255.255.255.255',
+  ips: [ '255.255.255.255' ],
+  time: 2,
+  port: 9,
+  name: 'discard'
 }
 ```
 
