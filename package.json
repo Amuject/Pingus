@@ -30,6 +30,8 @@
     "url": "https://github.com/wnynya/Pingus.git"
   },
   "scripts": {
+    "test": "sudo node test/test.mjs",
+    "test2": "node test/test.js",
     "pingus": "node lib/index.js",
     "babel": "npx babel src --out-file-extension .js --out-dir lib"
   },
