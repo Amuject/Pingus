@@ -31,7 +31,7 @@
   },
   "scripts": {
     "test": "sudo node test/test.mjs",
-    "pingus": "node lib/index.js",
+    "pingus": "sudo node src/index.mjs",
     "babel": "npx babel src --out-file-extension .js --out-dir lib"
   },
   "dependencies": {

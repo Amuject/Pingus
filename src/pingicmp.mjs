@@ -143,7 +143,7 @@ class PingICMP extends Ping {
       code: tc.code,
       typestr: tc.typestr,
       codestr: tc.codestr,
-      body: type == 0 ? body.toString() : null,
+      body: body ? body.toString() : null,
     };
   }
 
