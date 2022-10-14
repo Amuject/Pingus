@@ -1,6 +1,6 @@
 {
   "name": "pingus",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "A simple network ping tool. Supports TCP / UDP / ICMP protocol.",
   "author": "Wany <sung@wany.io> (https://wany.io)",
   "main": "lib/index.js",
@@ -31,7 +31,7 @@
   },
   "scripts": {
     "test": "sudo node test/test.mjs",
-    "pingus": "sudo node src/index.mjs",
+    "pingus": "sudo node src/index.mjs --pingus-cli",
     "babel": "npx babel src --out-file-extension .js --out-dir lib"
   },
   "dependencies": {
