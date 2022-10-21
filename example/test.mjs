@@ -43,6 +43,27 @@ pingus
   .catch(console.warn);
 
 pingus
+  .icmp({ host: '512.512.512.512' })
+  .then((result) => {
+    console.log('icmp ping u2 host ok');
+  })
+  .catch(console.warn);
+
+pingus
+  .tcp({ host: '512.512.512.512' })
+  .then((result) => {
+    console.log('tcp ping u2 host ok');
+  })
+  .catch(console.warn);
+
+pingus
+  .udpscan({ host: '1233.22.44.33' })
+  .then((result) => {
+    console.log('udp ping u2 host ok');
+  })
+  .catch(console.warn);
+
+pingus
   .traceroute({ host: 'example.com', timeout: 500 })
   .then((result) => {
     console.log('icmp traceroute v host ok');

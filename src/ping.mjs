@@ -149,6 +149,12 @@ class Ping extends EventEmitter {
       }
     }
 
+    try {
+      new IP(this.result.ip);
+    } catch (error) {
+      throw 'ENOTFOUND';
+    }
+
     this.result.status = 'ready';
     return;
   }
