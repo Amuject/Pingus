@@ -100,7 +100,7 @@ class PingTCP extends Ping {
           callback(null, result);
         })
         .on('error', (error, result) => {
-          reject(result);
+          resolve(result);
           callback(error, result);
         })
         .send();

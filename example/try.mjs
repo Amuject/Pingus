@@ -1,5 +1,14 @@
 import pingus from 'pingus';
 
-pingus.wol({ mac: '' }).then(console.log).catch(console.warn);
-
-pingus.icmp({ host: '255.255.255.255' }).then(console.log);
+pingus
+  .tcpscan({
+    host: '125.188.112.49',
+    ports: '@',
+    timeout: 1000,
+  })
+  .then((result) => {
+    console.log(result); //결과 출력
+  })
+  .catch((err) => {
+    console.warn(err);
+  });
