@@ -145,6 +145,7 @@ class PingUDP extends Ping {
     let ti = 0;
     const _this = this;
     const parse = (r) => {
+      r = r.value;
       r.name ? (_this.result.names[r.port] = r.name) : null;
       r.banner ? (_this.result.banners[r.port] = r.banner) : null;
       _this.result.statuses[r.status].push(r.port);
@@ -153,7 +154,7 @@ class PingUDP extends Ping {
 
     for (let i = 0; i < this.options.ports.length; i++) {
       if (tasks[ti].length == this.options.chunk) {
-        const pr = await Promise.all(tasks[ti]);
+        const pr = await Promise.allSettled(tasks[ti]);
         for (const p of pr) {
           parse(p);
         }
@@ -173,7 +174,7 @@ class PingUDP extends Ping {
       tasks[ti].push(PingUDP.sendAsync(opts));
     }
 
-    const pr = await Promise.all(tasks[ti]);
+    const pr = await Promise.allSettled(tasks[ti]);
     for (const p of pr) {
       parse(p);
     }
