@@ -1,3 +1,5 @@
+!/dist*
+tsconfig*.json
 babel.config.js
-/example
 /test
+/scripts

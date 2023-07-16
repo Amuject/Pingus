@@ -1,20 +1,13 @@
-module.exports = {
+export default {
   plugins: [
     ['babel-plugin-transform-import-meta'],
-    [
-      'replace-import-extension',
-      {
-        extMapping: {
-          '.mjs': '.js',
-        },
-      },
-    ],
     [
       '@babel/plugin-transform-modules-commonjs',
       {
         allowTopLevelThis: true,
       },
     ],
+    ['add-module-exports'],
   ],
   comments: false,
 };

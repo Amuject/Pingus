@@ -13,8 +13,6 @@ Pingus can...
 
 <br>
 
-Currently some functions are WIP (IP Range Scan).
-
 ## Table of Content
 
 - [Installation](#installation)
@@ -37,14 +35,12 @@ Currently some functions are WIP (IP Range Scan).
     - [`new PingICMP(options)`](#new-pingicmpoptions)
     - [`pingicmp.send()`](#pingicmpsend)
     - [`pingicmp.traceroute()`](#pingicmptraceroute)
-  - Class: [`pingus.RangeScanner`](#class-pingusrangescanner) _(WIP)_
-    - [`new RangeScanner(options)`](#new-rangescanneroptions) _(WIP)_
   - [Using `Callback` or `Promise` (`async/await`)](#using-callback-or-promise-asyncawait)
     - [`pingus.tcp(options[, callback])`](#pingustcpoptions-callback)
     - [`pingus.tcpscan(options[, callback])`](#pingustcpscanoptions-callback)
     - [`pingus.udp(options[, callback])`](#pingusudpoptions-callback)
     - [`pingus.udpscan(options[, callback])`](#pingusudpscanoptions-callback)
-    - [`pingus.wol(options[, callback])`](#pingusudpoptions-callback)
+    - [`pingus.wol(mac, options[, callback])`](#pinguswolmac-options-callback)
     - [`pingus.icmp(options[, callback])`](#pingusicmpoptions-callback)
     - [`pingus.traceroute(options[, callback])`](#pingusudpscanoptions-callback)
 - [Usage](#usage)
@@ -75,12 +71,11 @@ pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
 ```js
 // Result
 {
-  error: undefined,
   type: 'ping/tcp',
   status: 'open',
   host: 'localhost',
-  ip: '127.0.0.1',
-  ips: [ '127.0.0.1' ],
+  ip: IP { label: '127.0.0.1' },
+  ips: [ IP { label: '127.0.0.1' } ],
   time: 2,
   port: 22,
   name: 'ssh',
@@ -142,7 +137,7 @@ ping.send();
 
 <details><summary>Result (Console Output)</summary>
 
-```
+```js
 {
   error: undefined,
   type: 'ping/tcp',
@@ -183,7 +178,7 @@ Class for TCP ping.
   - `port` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set target port when using `pingtcp.send()`. _Default: `80`_
   - `ports` [`<Array>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)|[`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set target ports when using `pingtcp.scan()`. Use array of port numbers or query strings. See [example](#example-of-optionsports).
   - `timeout` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set timeout. _Default: `2000`_
-  - `dnsResolve` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
+  - `resolveDNS` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
   - `dnsServer` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set DNS server to resolve DNS records.
   - `filterBogon` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) [Filter bogon ip address](https://en.wikipedia.org/wiki/Bogon_filtering) in `host`. _Default: `true`_
 
@@ -238,7 +233,7 @@ Class for UDP ping.<br>
   - `body` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set body when send on UDP ping socket connected. Ignored when `buffer` options set.
   - `bytes` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set random bytes length when send on UDP ping socket connected. Ignored when `body` options set. _Default: `32`_
   - `timeout` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set timeout. _Default: `2000`_
-  - `dnsResolve` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
+  - `resolveDNS` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
   - `dnsServer` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set DNS server to resolve DNS records.
   - `filterBogon` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) [Filter bogon ip address](https://en.wikipedia.org/wiki/Bogon_filtering) in `host`. _Default: `true`_
 
@@ -268,7 +263,7 @@ Class for ICMP ping.
   - `ttlx` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set max ttl when using [`pingicmp.traceroute()`](#pingicmptraceroute). _Default: `64`_
   - `timeout` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set timeout. _Default: `2000`_
   - `timeoutx` [`<number>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#number_type) Set max timeout-stack when using [`pingicmp.traceroute()`](#pingicmptraceroute). _Default: `8`_
-  - `dnsResolve` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
+  - `resolveDNS` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) Resolve DNS `A` and `AAAA` records when `host` is domain address. _Default: `true`_
   - `dnsServer` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set DNS server to resolve DNS records.
   - `filterBogon` [`<boolean>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean) [Filter bogon ip address](https://en.wikipedia.org/wiki/Bogon_filtering) in `host`. _Default: `true`_
 
@@ -302,10 +297,10 @@ Send UDP ping.
 
 Scan ports using UDP ping.
 
-## `pingus.wol(options[, callback])`
+## `pingus.wol(mac, options[, callback])`
 
+- `mac` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set target [MAC](https://en.wikipedia.org/wiki/MAC_address) address.
 - `options` [`<Object>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) Same as options of [`new PingUDP(options)`](#new-pingudpoptions)
-  - `mac` [`<string>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) Set target [MAC](https://en.wikipedia.org/wiki/MAC_address) address.
 
 Send [magic packet](https://en.wikipedia.org/wiki/Wake-on-LAN#Magic_packet) UDP ping to use [WOL](https://en.wikipedia.org/wiki/Wake-on-LAN) feature.
 
@@ -321,7 +316,7 @@ Run traceroute.
 
 ## Use Pingus
 
-ESM
+ESM (TypeScript)
 
 ```js
 import pingus from 'pingus';
@@ -330,7 +325,7 @@ import pingus from 'pingus';
 CJS
 
 ```js
-const pingus = require('pingus').default;
+const pingus = require('pingus');
 ```
 
 ## Send Ping Styles
@@ -387,12 +382,11 @@ console.log(result);
 
 ```js
 {
-  error: undefined,
   type: 'ping/tcp',
   status: 'open',
   host: 'localhost',
-  ip: '127.0.0.1',
-  ips: [ '127.0.0.1' ],
+  ip: IP { label: '127.0.0.1' },
+  ips: [ IP { label: '127.0.0.1' } ],
   time: 2,
   port: 80,
   name: 'http',
@@ -420,12 +414,11 @@ new pingus.PingTCP({ host: 'localhost', port: 22 })
 
 ```js
 {
-  error: undefined,
   type: 'ping/tcp',
   status: 'open',
   host: 'localhost',
-  ip: '127.0.0.1',
-  ips: [ '127.0.0.1' ],
+  ip: IP { label: '127.0.0.1' },
+  ips: [ IP { label: '127.0.0.1' } ],
   time: 1,
   port: 22,
   name: 'ssh',
@@ -456,13 +449,15 @@ new pingus.PingTCP({
 
 ```js
 {
-  error: undefined,
   type: 'ping/tcp/scan',
   status: 'finish',
   host: 'localhost',
-  ip: '127.0.0.1',
-  ips: [ '127.0.0.1' ],
-  time: 2008,
+  ip: IP { label: '127.0.0.1' },
+  ips: [ IP { label: '127.0.0.1' } ],
+  time: 2009,
+  port: 80,
+  name: 'http',
+  banner: '',
   ports: [ 21, 22, 80, 443, 3306, 8080 ],
   statuses: {
     open: [ 22, 80, 8080 ],
@@ -504,12 +499,11 @@ new pingus.PingUDP({ host: 'localhost', port: 19132 })
 
 ```js
 {
-  error: undefined,
   type: 'ping/udp',
   status: 'close',
   host: 'localhost',
-  ip: '127.0.0.1',
-  ips: [ '127.0.0.1' ],
+  ip: IP { label: '127.0.0.1' },
+  ips: [ IP { label: '127.0.0.1' } ],
   time: 2,
   port: 19132,
   name: 'minecraft-be'
@@ -543,8 +537,8 @@ new pingus.PingUDP({
   type: 'ping/udp/scan',
   status: 'finish',
   host: 'localhost',
-  ip: '127.0.0.1',
-  ips: [ '127.0.0.1' ],
+  ip: IP { label: '127.0.0.1' },
+  ips: [ IP { label: '127.0.0.1' } ],
   time: 2003,
   ports: [ 67, 68, 161, 162, 445 ],
   statuses: {
@@ -573,7 +567,7 @@ new pingus.PingUDP({
 ```js
 // Send magic packet using UDP ping to 00-00-00-00-00-00
 pingus
-  .wol({ mac: '00-00-00-00-00-00' })
+  .wol('00-00-00-00-00-00')
   .then((result) => {
     console.log(result);
   })
@@ -586,12 +580,11 @@ pingus
 
 ```js
 {
-  error: undefined,
   type: 'ping/udp',
   status: 'open',
   host: '255.255.255.255',
-  ip: '255.255.255.255',
-  ips: [ '255.255.255.255' ],
+  ip: IP { label: '255.255.255.255' },
+  ips: [ IP { label: '255.255.255.255' } ],
   time: 2,
   port: 9,
   name: 'discard'
@@ -618,21 +611,24 @@ new pingus.PingICMP({ host: 'example.com' })
 
 ```js
 {
-  error: undefined,
   type: 'ping/icmp',
   status: 'reply',
   host: 'example.com',
-  ip: '93.184.216.34',
-  ips: [ '93.184.216.34', '2606:2800:220:1:248:1893:25c8:1946' ],
-  time: 122,
+  ip: IP { label: '93.184.216.34' },
+  ips: [
+    IP { label: '93.184.216.34' },
+    IP { label: '2606:2800:0220:0001:0248:1893:25c8:1946' }
+  ],
+  time: 130,
   ttl: 128,
-  bytes: 8,
+  bytes: 32,
   reply: {
     source: '93.184.216.34',
     type: 0,
     code: 0,
     typestr: 'ECHO_REPLY',
-    codestr: 'NO_CODE'
+    codestr: 'NO_CODE',
+    body: '767284c4'
   }
 }
 ```
@@ -655,23 +651,26 @@ new pingus.PingICMP({ host: 'example.com', ttl: 10 })
 
 ```js
 {
-  error: undefined,
   type: 'ping/icmp',
   status: 'exception',
   host: 'example.com',
-  ip: '93.184.216.34',
-  ips: [ '93.184.216.34', '2606:2800:220:1:248:1893:25c8:1946' ],
-  time: 127,
+  ip: IP { label: '93.184.216.34' },
+  ips: [
+    IP { label: '93.184.216.34' },
+    IP { label: '2606:2800:0220:0001:0248:1893:25c8:1946' }
+  ],
+  time: 133,
   ttl: 10,
-  bytes: 8,
+  bytes: 32,
   reply: {
     source: '152.195.76.133',
     type: 11,
     code: 0,
     typestr: 'TIME_EXCEEDED',
-    codestr: 'NO_CODE'
+    codestr: 'NO_CODE',
+    body: ']8X"\b\x00CQ\x00\x00\x00\x00'
   }
-
+}
 ```
 
 </details>
@@ -694,13 +693,17 @@ new pingus.PingICMP({ host: 'example.com', timeout: 500 })
 
 ```js
 {
-  error: undefined,
   type: 'ping/icmp/traceroute',
   status: 'finish',
   host: 'example.com',
-  ip: '93.184.216.34',
-  ips: [ '93.184.216.34', '2606:2800:220:1:248:1893:25c8:1946' ],
-  time: 1174,
+  ip: IP { label: '93.184.216.34' },
+  ips: [
+    IP { label: '93.184.216.34' },
+    IP { label: '2606:2800:0220:0001:0248:1893:25c8:1946' }
+  ],
+  time: 1040,
+  ttl: 128,
+  bytes: 32,
   hops: [
     { status: 'time_exceeded', ip: '10.0.0.1', ttl: 1 },
     { status: 'time_exceeded', ip: '121.175.134.1', ttl: 2 },
@@ -708,9 +711,9 @@ new pingus.PingICMP({ host: 'example.com', timeout: 500 })
     { status: 'time_exceeded', ip: '112.174.173.177', ttl: 4 },
     { status: 'timeout', ip: null, ttl: 5 },
     { status: 'time_exceeded', ip: '112.190.28.17', ttl: 6 },
-    { status: 'time_exceeded', ip: '112.174.91.82', ttl: 7 },
-    { status: 'time_exceeded', ip: '112.174.87.102', ttl: 8 },
-    { status: 'time_exceeded', ip: '206.223.123.14', ttl: 9 },
+    { status: 'time_exceeded', ip: '112.174.86.130', ttl: 7 },
+    { status: 'time_exceeded', ip: '112.174.88.218', ttl: 8 },
+    { status: 'time_exceeded', ip: '206.72.210.112', ttl: 9 },
     { status: 'time_exceeded', ip: '152.195.76.133', ttl: 10 },
     { status: 'reply', ip: '93.184.216.34', ttl: 11 }
   ]
