@@ -60,11 +60,25 @@ Pingus can...
 npm i pingus
 ```
 
+If an error occurs during installation, it may be due to the installation failure of the following packages.
+
+- [raw-socket](https://www.npmjs.com/package/raw-socket)
+
+It can be fixed by installing the GCC compiler.
+
+In Ubuntu:
+
+```bash
+sudo apt-get install -y build-essential
+```
+
 ## Simple Example
 
 ```js
 // TCP Ping to localhost:22
-import pingus from 'pingus'; // ESM
+import pingus from 'pingus'; // ESM, Typescript
+const pingus = require('pingus'); // CJS
+
 pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
 ```
 
