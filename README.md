@@ -66,11 +66,15 @@ If an error occurs during installation, it may be due to the installation failur
 
 It can be fixed by installing the GCC compiler.
 
-In Ubuntu:
+- In Ubuntu:
 
-```bash
-sudo apt-get install -y build-essential
-```
+  ```bash
+  sudo apt-get install -y build-essential
+  ```
+
+- In Windows:
+
+  Install [`Visual Studio`](https://visualstudio.microsoft.com/) including the `Desktop development with C++` workload.
 
 ## Simple Example
 
@@ -115,7 +119,7 @@ import pingus from 'pingus';
 const ping = new pingus.PingTCP({
   host: 'example.com',
 });
-ping.on('ready', (result) => {
+ping.on('result', (result) => {
   console.log('ping\ttarget:\t', result.host);
   console.log('\tips:\t', result.ips);
 });
