@@ -1,6 +1,6 @@
 {
   "name": "pingus",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A simple network ping tool. Supports TCP / UDP / ICMP protocol.",
   "author": "Wany <sung@wany.io> (https://wany.io)",
   "license": "MIT",
