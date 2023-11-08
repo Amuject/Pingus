@@ -38,12 +38,12 @@
   },
   "scripts": {
     "build": "npm run build:clean && npm run build:esm && npm run build:cjs && npm run build:package",
-    "build:clean": "bash scripts/build:clean.sh",
+    "build:clean": "bash scripts/build-clean.sh",
     "build:esm": "tsc --p tsconfig.json",
     "build:cjs": "npx babel dist-esm --out-dir dist-cjs",
-    "build:package": "bash scripts/build:package.sh",
+    "build:package": "bash scripts/build-package.sh",
     "test": "npm run test:clean && npm run test:esm && npm run test:cjs",
-    "test:clean": "bash scripts/test:clean.sh",
+    "test:clean": "bash scripts/test-clean.sh",
     "test:esm": "cd test; npm run test:esm",
     "test:cjs": "cd test; npm run test:cjs",
     "bnt": "npm run build && npm run test"
