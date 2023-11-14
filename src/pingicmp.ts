@@ -58,8 +58,10 @@ class PingICMP extends Ping {
     this.ready()
       .then(() => {
         this.addressFamily = this.target.ip.is4()
+          // @ts-expect-error - Upstream bug. raw.AddressFamily should be exported
           ? raw.AddressFamily.IPv4
-          : raw.AddressFamily.IPv6;
+          // @ts-expect-error
+          : raw.AddressFamily.IPv6
         this.protocol = this.target.ip.is4()
           ? raw.Protocol.ICMP
           : raw.Protocol.ICMPv6;
@@ -140,6 +142,7 @@ class PingICMP extends Ping {
             if (error) {
               clearTimeout(timeout);
 
+              // @ts-expect-error - code is not a property of error
               this.result.error = error.code || error.message || error;
               this.result.status = 'error';
 

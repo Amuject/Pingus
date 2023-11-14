@@ -1,13 +1,5 @@
 # Pingus
 
-> **Known Issue**
->
-> _Currently Pingus not working in node version 20 and laters. This will be fixed with an update._
-
-<br>
-<br>
-<Br>
-
 **A simple ping tool.
 Supports TCP / UDP / ICMP protocol.**
 
