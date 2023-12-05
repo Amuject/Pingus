@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": "~18"
+    "node": ">=18"
   },
   "exports": {
     ".": {
@@ -38,20 +38,21 @@
   },
   "scripts": {
     "build": "npm run build:clean && npm run build:esm && npm run build:cjs && npm run build:package",
-    "build:clean": "bash scripts/build-clean.sh",
+    "build:clean": "node scripts/build-clean.js",
     "build:esm": "tsc --p tsconfig.json",
     "build:cjs": "npx babel dist-esm --out-dir dist-cjs",
-    "build:package": "bash scripts/build-package.sh",
+    "build:package": "node scripts/build-package.js",
     "test": "npm run test:clean && npm run test:esm && npm run test:cjs",
-    "test:clean": "bash scripts/test-clean.sh",
-    "test:esm": "cd test; npm run test:esm",
-    "test:cjs": "cd test; npm run test:cjs",
+    "test:clean": "node scripts/test-clean.js && npm install",
+    "test:esm": "npm run -w ./test test:esm",
+    "test:cjs": "npm run -w ./test test:cjs",
     "bnt": "npm run build && npm run test"
   },
+  "workspaces":["test"],
   "dependencies": {
     "@wnynya/dns": "^0.7.1",
     "@wnynya/ip": "^0.9.0",
-    "raw-socket": "^1.7.0"
+    "raw-socket": "npm:@neuralegion/raw-socket@^1.8.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.22.5",
