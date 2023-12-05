@@ -1,6 +1,6 @@
 {
   "name": "pingus",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A simple network ping tool. Supports TCP / UDP / ICMP protocol.",
   "author": "Wany <sung@wany.io> (https://wany.io)",
   "license": "MIT",
@@ -48,7 +48,9 @@
     "test:cjs": "npm run -w ./test test:cjs",
     "bnt": "npm run build && npm run test"
   },
-  "workspaces":["test"],
+  "workspaces": [
+    "test"
+  ],
   "dependencies": {
     "@wnynya/dns": "^0.7.1",
     "@wnynya/ip": "^0.9.0",
