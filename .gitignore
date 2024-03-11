@@ -1,6 +1,4 @@
-**/node_modules
-/node_modules
+**/node_module
 **/package-lock.json
-/package-lock.json
 /dist*
 /deprecated
