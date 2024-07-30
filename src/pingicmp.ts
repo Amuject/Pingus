@@ -1,5 +1,4 @@
 import { Ping, PingOptions, PingTarget, PingResult } from './ping.js';
-import IP from '@wnynya/ip';
 import raw from 'raw-socket';
 
 interface PingICMPOptions extends PingOptions {
@@ -58,9 +57,7 @@ class PingICMP extends Ping {
     this.ready()
       .then(() => {
         this.addressFamily = this.target.ip.is4()
-          // @ts-expect-error - Upstream bug. raw.AddressFamily should be exported
           ? raw.AddressFamily.IPv4
-          // @ts-expect-error
           : raw.AddressFamily.IPv6
         this.protocol = this.target.ip.is4()
           ? raw.Protocol.ICMP
