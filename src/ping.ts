@@ -22,6 +22,17 @@ interface PingResult {
   ip: IP | null;
   ips: IP[];
   time: number;
+  toPrimitiveJSON?(): JSONPingResult;
+}
+
+interface JSONPingResult {
+  error?: Error | string;
+  type: string | null;
+  status: string | null;
+  host: string | null;
+  ip: string | null;
+  ips: string[];
+  time: number;
 }
 
 abstract class Ping extends EventEmitter {
@@ -29,7 +40,7 @@ abstract class Ping extends EventEmitter {
   target: PingTarget;
   result: PingResult;
 
-  after(options: PingOptions) {
+  afterConstructor(options: PingOptions) {
     // host
     const hostString =
       options.host instanceof IP
@@ -49,6 +60,18 @@ abstract class Ping extends EventEmitter {
     // dns
     this.options.dnsServer =
       options.dnsServer === undefined ? '1.1.1.1' : options.dnsServer;
+
+    // toPrimitiveJSON
+    this.result.toPrimitiveJSON = () => {
+      const result = JSON.parse(JSON.stringify(this.result));
+      result.ip = result?.ip?.label;
+      const ips = [];
+      for (const ip of result.ips) {
+        ips.push(ip.label);
+      }
+      result.ips = ips;
+      return result;
+    };
   }
 
   async ready() {

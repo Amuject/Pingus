@@ -74,9 +74,9 @@ class PingUDP extends Ping {
       name: this.portName(this.target.port),
     };
 
-    this.after(options);
-
     this.parsePorts(options);
+
+    this.afterConstructor(options);
   }
 
   send() {

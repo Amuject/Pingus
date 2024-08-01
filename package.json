@@ -54,7 +54,7 @@
   "dependencies": {
     "@wnynya/dns": "^0.7.1",
     "@wnynya/ip": "^0.9.0",
-    "raw-socket": "npm:@neuralegion/raw-socket@^1.8.2"
+    "raw-socket": "^1.8.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.22.5",
