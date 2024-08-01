@@ -89,6 +89,8 @@ abstract class Ping extends EventEmitter {
       }
     }
 
+    this.emit('ready', this.result);
+
     return;
   }
 

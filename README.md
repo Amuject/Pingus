@@ -98,6 +98,7 @@ pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
   port: 22,
   name: 'ssh',
   banner: 'SSH-2.0-OpenSSH_8.9p1 Ubuntu-3'
+  toPrimitiveJSON: [Function (anonymous)]
 }
 ```
 
@@ -119,9 +120,10 @@ import pingus from 'pingus';
 const ping = new pingus.PingTCP({
   host: 'example.com',
 });
-ping.on('result', (result) => {
-  console.log('ping\ttarget:\t', result.host);
-  console.log('\tips:\t', result.ips);
+ping.on('ready', (result) => {
+  const data = result.toPrimitiveJSON();
+  console.log('ping\ttarget:\t', data.host);
+  console.log('\tips:\t', data.ips);
 });
 ping.send();
 ```
@@ -129,8 +131,8 @@ ping.send();
 <details><summary>Result (Console Output)</summary>
 
 ```
-ping    target: example.com
-        ips: [ '93.184.216.34', '2606:2800:220:1:248:1893:25c8:1946' ]
+ping    target:  example.com
+        ips:     [ '93.184.215.14', '2606:2800:021f:cb07:6820:80da:af6b:8b2c' ]
 ```
 
 </details>
@@ -148,6 +150,7 @@ const ping = new pingus.PingTCP({
   host: 'example.com',
 });
 ping.on('result', (result) => {
+  const data = result.toPrimitiveJSON();
   console.log(result);
 });
 ping.send();
@@ -157,13 +160,12 @@ ping.send();
 
 ```js
 {
-  error: undefined,
   type: 'ping/tcp',
   status: 'open',
   host: 'example.com',
-  ip: '93.184.216.34',
-  ips: [ '93.184.216.34', '2606:2800:220:1:248:1893:25c8:1946' ],
-  time: 127,
+  ip: '93.184.215.14',
+  ips: [ '93.184.215.14', '2606:2800:021f:cb07:6820:80da:af6b:8b2c' ],
+  time: 134,
   port: 80,
   name: 'http',
   banner: ''
@@ -354,7 +356,7 @@ const pingus = require('pingus');
 // TCP ping to localhost:80
 new pingus.PingTCP({ host: 'localhost' })
   .on('result', (result) => {
-    console.log(result);
+    console.log(result.toPrimitiveJSON());
   })
   .on('error', (err, result) => {
     throw err;
@@ -381,7 +383,7 @@ pingus.tcp({ host: 'localhost' }, (err, result) => {
 pingus
   .tcp({ host: 'localhost' })
   .then((result) => {
-    console.log(result);
+    console.log(result.toPrimitiveJSON());
   })
   .catch((err) => {
     throw err;
@@ -393,7 +395,7 @@ pingus
 ```js
 // TCP ping to localhost:80
 const result = await pingus.tcp({ host: 'localhost' });
-console.log(result);
+console.log(result.toPrimitiveJSON());
 ```
 
 <details><summary>Result (Console Output)</summary>
@@ -403,8 +405,8 @@ console.log(result);
   type: 'ping/tcp',
   status: 'open',
   host: 'localhost',
-  ip: IP { label: '127.0.0.1' },
-  ips: [ IP { label: '127.0.0.1' } ],
+  ip: '127.0.0.1',
+  ips: [ '127.0.0.1' ],
   time: 2,
   port: 80,
   name: 'http',
@@ -420,7 +422,7 @@ console.log(result);
 // TCP ping to localhost:22
 new pingus.PingTCP({ host: 'localhost', port: 22 })
   .on('result', (result) => {
-    console.log(result);
+    console.log(result.toPrimitiveJSON());
   })
   .on('error', (err, result) => {
     throw err;
@@ -435,9 +437,9 @@ new pingus.PingTCP({ host: 'localhost', port: 22 })
   type: 'ping/tcp',
   status: 'open',
   host: 'localhost',
-  ip: IP { label: '127.0.0.1' },
-  ips: [ IP { label: '127.0.0.1' } ],
-  time: 1,
+  ip: '127.0.0.1',
+  ips: [ '127.0.0.1' ],
+  time: 2,
   port: 22,
   name: 'ssh',
   banner: 'SSH-2.0-OpenSSH_8.9p1 Ubuntu-3'
@@ -455,7 +457,7 @@ new pingus.PingTCP({
   ports: [21, 22, 80, 443, 3306, 8080],
 })
   .on('result', (result) => {
-    console.log(result);
+    console.log(result.toPrimitiveJSON());
   })
   .on('error', (err, result) => {
     throw err;
@@ -470,8 +472,8 @@ new pingus.PingTCP({
   type: 'ping/tcp/scan',
   status: 'finish',
   host: 'localhost',
-  ip: IP { label: '127.0.0.1' },
-  ips: [ IP { label: '127.0.0.1' } ],
+  ip: '127.0.0.1',
+  ips: [ '127.0.0.1' ],
   time: 2009,
   port: 80,
   name: 'http',
@@ -505,7 +507,7 @@ new pingus.PingTCP({
 // UDP ping to localhost:19132
 new pingus.PingUDP({ host: 'localhost', port: 19132 })
   .on('result', (result) => {
-    console.log(result);
+    console.log(result.toPrimitiveJSON());
   })
   .on('error', (err, result) => {
     throw err;
@@ -520,8 +522,8 @@ new pingus.PingUDP({ host: 'localhost', port: 19132 })
   type: 'ping/udp',
   status: 'close',
   host: 'localhost',
-  ip: IP { label: '127.0.0.1' },
-  ips: [ IP { label: '127.0.0.1' } ],
+  ip: '127.0.0.1',
+  ips: [ '127.0.0.1' ],
   time: 2,
   port: 19132,
   name: 'minecraft-be'
@@ -539,7 +541,7 @@ new pingus.PingUDP({
   ports: [67, 68, 161, 162, 445],
 })
   .on('result', (result) => {
-    console.log(result);
+    console.log(result.toPrimitiveJSON());
   })
   .on('error', (err, result) => {
     throw err;
@@ -555,8 +557,8 @@ new pingus.PingUDP({
   type: 'ping/udp/scan',
   status: 'finish',
   host: 'localhost',
-  ip: IP { label: '127.0.0.1' },
-  ips: [ IP { label: '127.0.0.1' } ],
+  ip: '127.0.0.1',
+  ips: [ '127.0.0.1' ],
   time: 2003,
   ports: [ 67, 68, 161, 162, 445 ],
   statuses: {
@@ -587,7 +589,7 @@ new pingus.PingUDP({
 pingus
   .wol('00-00-00-00-00-00')
   .then((result) => {
-    console.log(result);
+    console.log(result.toPrimitiveJSON());
   })
   .catch((error) => {
     throw error;
@@ -601,8 +603,8 @@ pingus
   type: 'ping/udp',
   status: 'open',
   host: '255.255.255.255',
-  ip: IP { label: '255.255.255.255' },
-  ips: [ IP { label: '255.255.255.255' } ],
+  ip: '255.255.255.255',
+  ips: [ '255.255.255.255' ],
   time: 2,
   port: 9,
   name: 'discard'
@@ -617,7 +619,7 @@ pingus
 // ICMP ping to example.com
 new pingus.PingICMP({ host: 'example.com' })
   .on('result', (result) => {
-    console.log(result);
+    console.log(result.toPrimitiveJSON());
   })
   .on('error', (err, result) => {
     throw err;
@@ -632,11 +634,8 @@ new pingus.PingICMP({ host: 'example.com' })
   type: 'ping/icmp',
   status: 'reply',
   host: 'example.com',
-  ip: IP { label: '93.184.216.34' },
-  ips: [
-    IP { label: '93.184.216.34' },
-    IP { label: '2606:2800:0220:0001:0248:1893:25c8:1946' }
-  ],
+  ip: '93.184.215.14',
+  ips: [ '93.184.215.14', '2606:2800:021f:cb07:6820:80da:af6b:8b2c' ],
   time: 130,
   ttl: 128,
   bytes: 32,
@@ -657,7 +656,7 @@ new pingus.PingICMP({ host: 'example.com' })
 // ICMP ping to example.com using ttl = 10
 new pingus.PingICMP({ host: 'example.com', ttl: 10 })
   .on('result', (result) => {
-    console.log(result);
+    console.log(result.toPrimitiveJSON());
   })
   .on('error', (err, result) => {
     throw err;
@@ -672,11 +671,8 @@ new pingus.PingICMP({ host: 'example.com', ttl: 10 })
   type: 'ping/icmp',
   status: 'exception',
   host: 'example.com',
-  ip: IP { label: '93.184.216.34' },
-  ips: [
-    IP { label: '93.184.216.34' },
-    IP { label: '2606:2800:0220:0001:0248:1893:25c8:1946' }
-  ],
+  ip: '93.184.215.14',
+  ips: [ '93.184.215.14', '2606:2800:021f:cb07:6820:80da:af6b:8b2c' ],
   time: 133,
   ttl: 10,
   bytes: 32,
@@ -699,7 +695,7 @@ new pingus.PingICMP({ host: 'example.com', ttl: 10 })
 // Traceroute to example.com
 new pingus.PingICMP({ host: 'example.com', timeout: 500 })
   .on('result', (result) => {
-    console.log(result);
+    console.log(result.toPrimitiveJSON());
   })
   .on('error', (err, result) => {
     throw err;
@@ -714,26 +710,78 @@ new pingus.PingICMP({ host: 'example.com', timeout: 500 })
   type: 'ping/icmp/traceroute',
   status: 'finish',
   host: 'example.com',
-  ip: IP { label: '93.184.216.34' },
-  ips: [
-    IP { label: '93.184.216.34' },
-    IP { label: '2606:2800:0220:0001:0248:1893:25c8:1946' }
-  ],
-  time: 1040,
+  ip: '93.184.215.14',
+  ips: [ '93.184.215.14', '2606:2800:021f:cb07:6820:80da:af6b:8b2c' ],
+  time: 7614,
   ttl: 128,
   bytes: 32,
   hops: [
-    { status: 'time_exceeded', ip: '10.0.0.1', ttl: 1 },
-    { status: 'time_exceeded', ip: '121.175.134.1', ttl: 2 },
-    { status: 'time_exceeded', ip: '112.173.92.9', ttl: 3 },
-    { status: 'time_exceeded', ip: '112.174.173.177', ttl: 4 },
-    { status: 'timeout', ip: null, ttl: 5 },
-    { status: 'time_exceeded', ip: '112.190.28.17', ttl: 6 },
-    { status: 'time_exceeded', ip: '112.174.86.130', ttl: 7 },
-    { status: 'time_exceeded', ip: '112.174.88.218', ttl: 8 },
-    { status: 'time_exceeded', ip: '206.72.210.112', ttl: 9 },
-    { status: 'time_exceeded', ip: '152.195.76.133', ttl: 10 },
-    { status: 'reply', ip: '93.184.216.34', ttl: 11 }
+    {
+      status: 'time_exceeded',
+      ip: '172.19.80.1',
+      ttl: 1,
+      rtt: { min: 0, max: 1, avg: 1 }
+    },
+    {
+      status: 'time_exceeded',
+      ip: '172.30.1.254',
+      ttl: 2,
+      rtt: { min: 0, max: 1, avg: 1 }
+    },
+    {
+      status: 'timeout',
+      ip: null,
+      ttl: 3,
+      rtt: { min: 2001, max: 2002, avg: 2002 }
+    },
+    {
+      status: 'time_exceeded',
+      ip: '112.188.59.77',
+      ttl: 4,
+      rtt: { min: 2, max: 3, avg: 3 }
+    },
+    {
+      status: 'time_exceeded',
+      ip: '112.188.53.13',
+      ttl: 5,
+      rtt: { min: 1, max: 2, avg: 2 }
+    },
+    {
+      status: 'time_exceeded',
+      ip: '112.174.47.177',
+      ttl: 6,
+      rtt: { min: 7, max: 8, avg: 8 }
+    },
+    {
+      status: 'time_exceeded',
+      ip: '112.174.91.130',
+      ttl: 7,
+      rtt: { min: 7, max: 8, avg: 8 }
+    },
+    {
+      status: 'time_exceeded',
+      ip: '112.174.87.102',
+      ttl: 8,
+      rtt: { min: 129, max: 130, avg: 130 }
+    },
+    {
+      status: 'time_exceeded',
+      ip: '206.72.210.112',
+      ttl: 9,
+      rtt: { min: 127, max: 128, avg: 128 }
+    },
+    {
+      status: 'time_exceeded',
+      ip: '152.195.76.151',
+      ttl: 10,
+      rtt: { min: 132, max: 134, avg: 133 }
+    },
+    {
+      status: 'reply',
+      ip: '93.184.215.14',
+      ttl: 11,
+      rtt: { min: 126, max: 126, avg: 126 }
+    }
   ]
 }
 ```
