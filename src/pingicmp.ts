@@ -139,7 +139,6 @@ class PingICMP extends Ping {
             if (error) {
               clearTimeout(timeout);
 
-              // @ts-expect-error - code is not a property of error
               this.result.error = error.code || error.message || error;
               this.result.status = 'error';
 
