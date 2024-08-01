@@ -75,9 +75,9 @@ class PingTCP extends Ping {
       banner: '',
     };
 
-    this.after(options);
-
     this.parsePorts(options);
+
+    this.afterConstructor(options);
   }
 
   send() {

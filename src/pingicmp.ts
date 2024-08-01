@@ -48,9 +48,9 @@ class PingICMP extends Ping {
       bytes: this.options.bytes,
     };
 
-    this.after(options);
-
     this.id = this.randomString(16);
+
+    this.afterConstructor(options);
   }
 
   send() {
@@ -58,7 +58,7 @@ class PingICMP extends Ping {
       .then(() => {
         this.addressFamily = this.target.ip.is4()
           ? raw.AddressFamily.IPv4
-          : raw.AddressFamily.IPv6
+          : raw.AddressFamily.IPv6;
         this.protocol = this.target.ip.is4()
           ? raw.Protocol.ICMP
           : raw.Protocol.ICMPv6;
@@ -304,25 +304,50 @@ class PingICMP extends Ping {
     const timestamp = new Date().getTime();
 
     let timeoutstack = 0;
-    for (let i = ttln; i <= ttlx; i++) {
-      const opts = JSON.parse(JSON.stringify(this.options));
-      opts.host = this.result.ip;
-      opts.ttl = i;
-      opts.dnsResolve = false;
-      opts.filterBogon = false;
-      const result = await PingICMP.sendAsync(opts);
+    let ping = 3;
 
-      const hop = {
-        status: result.status,
-        ip: result?.reply?.source,
-        ttl: i,
+    for (let ttl = ttln; ttl <= ttlx; ttl++) {
+      const options = {
+        host: this.result.ip,
+        bytes: 32,
+        ttl: ttl,
+        dnsResolve: false,
+        filterBogon: false,
       };
 
-      if (result.status == 'exception') {
-        hop.status = result.reply.typestr.toLowerCase();
+      const results = [];
+      for (let j = 0; j < ping; j++) {
+        results.push(await PingICMP.sendAsync(options));
       }
 
-      if (result.status == 'timeout') {
+      const hop = {
+        status: results[0]?.status,
+        ip: results[0]?.reply?.source,
+        ttl: ttl,
+        rtt: {
+          min: Infinity,
+          max: -Infinity,
+          avg: 0,
+        },
+      };
+
+      let rttSum = 0;
+      let rttCount = 0;
+      for (const result of results) {
+        hop.status = result.status;
+        hop.rtt.min = Math.min(hop.rtt.min, result.time);
+        hop.rtt.max = Math.max(hop.rtt.max, result.time);
+        rttSum += result.time;
+        rttCount++;
+      }
+
+      hop.rtt.avg = Math.ceil(rttSum / rttCount);
+
+      if (hop.status == 'exception') {
+        hop.status = results[0]?.reply.typestr.toLowerCase();
+      }
+
+      if (hop.status == 'timeout') {
         hop.ip = null;
         timeoutstack++;
       } else {
@@ -331,7 +356,7 @@ class PingICMP extends Ping {
 
       this.result.hops.push(hop);
 
-      if (result?.reply?.source == this.result.ip) {
+      if (hop.ip == this.result.ip) {
         break;
       }
       if (timeoutstack >= timeoutx) {
