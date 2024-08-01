@@ -1,6 +1,6 @@
 {
   "name": "pingus",
-  "version": "1.2.4",
+  "version": "1.3.0",
   "description": "A simple network ping tool. Supports TCP / UDP / ICMP protocol.",
   "author": "Wany <sung@wanyne.com> (https://wanyne.com)",
   "license": "MIT",
@@ -31,10 +31,10 @@
     "net",
     "dgram"
   ],
-  "homepage": "https://github.com/wnynya/Pingus#readme",
+  "homepage": "https://github.com/Amuject/Pingus#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wnynya/Pingus.git"
+    "url": "https://github.com/Amuject/Pingus.git"
   },
   "scripts": {
     "build": "npm run build:clean && npm run build:esm && npm run build:cjs && npm run build:package",
