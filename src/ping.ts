@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events';
-import dns from '@wnynya/dns';
-import IP from '@wnynya/ip';
+import dns from '@amuject/dns';
+import IP from '@amuject/ip';
 
 interface PingOptions {
   host: IP | string;

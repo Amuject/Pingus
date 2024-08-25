@@ -1,5 +1,5 @@
 import { Ping, PingOptions, PingTarget, PingResult } from './ping.js';
-import IP from '@wnynya/ip';
+import IP from '@amuject/ip';
 import net from 'node:net';
 
 import fs from 'fs';
