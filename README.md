@@ -18,20 +18,20 @@ Pingus can...
 - [Installation](#installation)
 - [Simple Example](#simple-example)
 - [API](#api)
-  - Class: [`pingus.Ping`](#class-pingusping)
+  - Abstract Class: [`pingus.Ping`](#abstract-class-pingusping)
     - Event: [`'ready'`](#event-ready)
     - Event: [`'result'`](#event-result)
     - Event: [`'error'`](#event-error)
     - [`ping.send()`](#pingsend)
-  - Class: [`pingus.PingTCP`](#class-pinguspingtcp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
+  - Class: [`pingus.PingTCP`](#class-pinguspingtcp-extends-pingusping) Extends: [`pingus.Ping`](#abstract-class-pingusping)
     - [`new PingTCP(options)`](#new-pingtcpoptions)
     - [`pingtcp.send()`](#pingtcpsend)
     - [`pingtcp.scan()`](#pingtcpscan)
-  - Class: [`pingus.PingUDP`](#class-pinguspingudp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
+  - Class: [`pingus.PingUDP`](#class-pinguspingudp-extends-pingusping) Extends: [`pingus.Ping`](#abstract-class-pingusping)
     - [`new PingUDP(options)`](#new-pingudpoptions)
     - [`pingudp.send()`](#pingudpsend)
     - [`pingudp.scan()`](#pingudpscan)
-  - Class: [`pingus.PingICMP`](#class-pinguspingicmp-extends-pingusping) Extends: [`pingus.Ping`](#class-pingusping)
+  - Class: [`pingus.PingICMP`](#class-pinguspingicmp-extends-pingusping) Extends: [`pingus.Ping`](#abstract-class-pingusping)
     - [`new PingICMP(options)`](#new-pingicmpoptions)
     - [`pingicmp.send()`](#pingicmpsend)
     - [`pingicmp.traceroute()`](#pingicmptraceroute)
@@ -56,7 +56,7 @@ Pingus can...
 
 ## Installation
 
-```
+``` cmd bash
 npm i pingus
 ```
 
@@ -97,16 +97,16 @@ pingus.tcp({ host: 'localhost', port: 22 }).then(console.log);
   time: 2,
   port: 22,
   name: 'ssh',
-  banner: 'SSH-2.0-OpenSSH_8.9p1 Ubuntu-3'
+  banner: 'SSH-2.0-OpenSSH_8.9p1 Ubuntu-3',
   toPrimitiveJSON: [Function (anonymous)]
 }
 ```
 
 # API
 
-## Class: `pingus.Ping`
+## Abstract Class: `pingus.Ping`
 
-`pingus.Ping` is [`EventEmitter`](https://nodejs.org/docs/latest/api/events.html) with the following events:
+`pingus.Ping` is an [`EventEmitter`](https://nodejs.org/docs/latest/api/events.html) with the following events:
 
 ### Event: `'ready'`
 
@@ -117,7 +117,7 @@ Emitted when ready (Resolve DNS, Filter Bogon IP) to send ping after call [`ping
 ```js
 import pingus from 'pingus';
 
-const ping = new pingus.PingTCP({
+const ping = new pingus.PingTCP({ // Using PingTCP not Ping
   host: 'example.com',
 });
 ping.on('ready', (result) => {
@@ -130,7 +130,7 @@ ping.send();
 
 <details><summary>Result (Console Output)</summary>
 
-```
+```text
 ping    target:  example.com
         ips:     [ '93.184.215.14', '2606:2800:021f:cb07:6820:80da:af6b:8b2c' ]
 ```
@@ -185,11 +185,11 @@ Emitted when an error occurs. `result` has last statement before error occurs an
 
 Send ping. See some of examples in [Usage](#usage)
 
-## Class: `pingus.PingTCP` Extends: [`pingus.Ping`](#class-pingusping)
+## Class: `pingus.PingTCP` Extends: [`pingus.Ping`](#abstract-class-pingusping)
 
 Class for TCP ping.
 <br>
-`pingus.PingTCP` is type of [`pingus.Ping`](#class-pingusping)
+`pingus.PingTCP` is type of [`pingus.Ping`](#abstract-class-pingusping)
 
 ### `new PingTCP(options)`
 
@@ -238,10 +238,10 @@ Some of examples in [Usage](#usage).
 Scan ports using TCP ping. Return result on Event: [`'result'`](#event-result).
 See some of examples in [Usage](#usage).
 
-## Class: `pingus.PingUDP` Extends: [`pingus.Ping`](#class-pingusping)
+## Class: `pingus.PingUDP` Extends: [`pingus.Ping`](#abstract-class-pingusping)
 
 Class for UDP ping.<br>
-`pingus.PingUDP` is type of [`pingus.Ping`](#class-pingusping)
+`pingus.PingUDP` is type of [`pingus.Ping`](#abstract-class-pingusping)
 
 ### `new PingUDP(options)`
 
@@ -268,11 +268,11 @@ Similar with [`pingtcp.scan()`](#pingtcpscan).<br>
 Scan ports using UDP ping. Return result on Event: [`'result'`](#event-result).
 See some of examples in [Usage](#usage).
 
-## Class: `pingus.PingICMP` Extends: [`pingus.Ping`](#class-pingusping)
+## Class: `pingus.PingICMP` Extends: [`pingus.Ping`](#abstract-class-pingusping)
 
 Class for ICMP ping.
 <br>
-`pingus.PingICMP` is type of [`pingus.Ping`](#class-pingusping)
+`pingus.PingICMP` is type of [`pingus.Ping`](#abstract-class-pingusping)
 
 ### `new PingICMP(options)`
 
